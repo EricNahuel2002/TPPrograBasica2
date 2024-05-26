@@ -4,16 +4,18 @@ import static org.junit.Assert.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.junit.Before;
 import org.junit.Test;
-
-import ar.edu.unlam.pb2.dominio.Cliente;
-import ar.edu.unlam.pb2.dominio.Empleado;
-import ar.edu.unlam.pb2.dominio.Encargado;
-import ar.edu.unlam.pb2.dominio.Mesero;
-import ar.edu.unlam.pb2.dominio.Reserva;
-
+import ar.edu.unlam.tppb2.dominio.*;
 public class TestRestaurante {
-
+	
+	private Restaurante restaurante;
+	
+	@Before
+	public void init() {
+		this.restaurante = new Restaurante("Italia");
+	}
+	
 	@Test
 	public void queUnClientePuedaHacerUnaReserva() {
 		Reserva reserva = new Reserva(1,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0));
