@@ -61,5 +61,15 @@ public class Restaurante {
 	}
 
 
+	public Cliente buscarUnCliente(Integer numero) {
+		for(Cliente cliente: clientes) {
+			if(cliente.getNumero().equals(numero)) {
+				return cliente;
+			}
+		}
+		return null;
+	}
+
+
 	
 }

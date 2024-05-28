@@ -1,5 +1,6 @@
 package ar.edu.unlam.pb2.paquetetest;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -142,7 +143,7 @@ public class TestBase {
 		
 		Reserva reserva = new Reserva(001, LocalDate.of(2024, 5, 28), LocalTime.of(21, 0));
 		
-		Cliente cliente = new Cliente(001 ,"Bautista");
+		Cliente cliente = new Cliente(001, "Bautista");
 		
 		ReservaCliente reservaCliente = new ReservaCliente(reserva, cliente);
 		
@@ -152,5 +153,29 @@ public class TestBase {
 	}
 	
 	
+	@Test
+	public void queSePuedaBuscarUnEmpleadoPorSuId() {
+		
+		Empleado empleadoABuscar = new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12));
+		
+		restaurante.agregarEmpleado(empleadoABuscar);
+		
+		Empleado empleadoObtenido = restaurante.buscarUnEmpleado(empleadoABuscar.getCodigo());
+		
+		assertEquals(empleadoABuscar, empleadoObtenido);
+		
+	}
+	
+	@Test
+	public void queSePuedaBuscarUnClientePorSuNumero() {
+		
+		Cliente clienteABuscar = new Cliente(001, "Bautista");
+		
+		restaurante.agregarCliente(clienteABuscar);
+		
+		Cliente clienteObtenido = restaurante.buscarUnCliente(clienteABuscar.getNumero());
+		
+		assertEquals(clienteABuscar, clienteObtenido);
+	}
 	
 }
