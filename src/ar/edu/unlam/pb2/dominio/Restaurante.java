@@ -70,6 +70,12 @@ public class Restaurante {
 		return null;
 	}
 
+	@Override
+	// falta crear una interfaz 
+	public List<Empleado> obtenerListaDeTodosLosEmpleadosOrdenadoDeMayorAMenorPorSueldo() {
+		Collections.sort(empleados,(o1,o2) -> o2.getSueldo().compareTo(o1.getSueldo()));
+		return this.empleados;
+	}
 
 	
 }

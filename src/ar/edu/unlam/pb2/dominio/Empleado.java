@@ -18,6 +18,13 @@ public class Empleado {
 		this.anioIngreso = anioIngreso;
 	}
 	
+	public Empleado(Integer codigo, String nombre, Double sueldo, LocalDate anioIngreso) {
+		this.codigo = codigo;
+		this.nombre = nombre;
+		this.sueldo = sueldo;
+		this.anioIngreso = anioIngreso;
+	}
+	
 	
 	
 	public Integer getCodigo() {
