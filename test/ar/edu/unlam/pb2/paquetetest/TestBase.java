@@ -254,4 +254,51 @@ public class TestBase {
 
 	}
 	
+	@Test
+	public void queSePuedaCalcularElSueldoDeUnEncargadoSinEmpleadosACargo() {
+
+		Empleado encargado = new Encargado(123, "Julieta", LocalDate.of(2000,5,19));
+		restaurante.agregarEmpleado(encargado);
+
+		restaurante.cargarValorHoraDeUnEmpleado(123, 9800.0);
+		restaurante.cargarHorasTrabajadasDeUnEmpleado(123, 270); 
+		restaurante.cargarSueldoEmpleado(123);
+
+		Double sueldoObtenido = restaurante.obtenerSueldoDeUnEmpleado(123);
+		Double sueldoDeseado = 270 * 9800.0 + encargado.calcularAniosDeAntiguedad()*5000;
+
+		assertEquals(sueldoDeseado, sueldoObtenido);
+
+	}
+
+	@Test
+	public void queSePuedaCalcularElSueldoDeUnMeseroSinReservasRealizadas() {
+		Empleado mesero = new Mesero(112, "Juanito", LocalDate.of(2020,6,2));
+		restaurante.agregarEmpleado(mesero);
+		restaurante.cargarValorHoraDeUnEmpleado(112, 100.0);
+		restaurante.cargarHorasTrabajadasDeUnEmpleado(112, 20);
+
+		restaurante.cargarSueldoEmpleado(112);
+
+		Double sueldoObtenido = restaurante.obtenerSueldoDeUnEmpleado(112);
+		Double sueldoDeseado = 20 * 100.0 + mesero.calcularAniosDeAntiguedad()*1000;
+
+		assertEquals(sueldoDeseado, sueldoObtenido);
+	}
+
+	@Test
+	public void queSePuedaCalcularElSueldoDeUnCajeroSinAniosDeAntiguedad() {
+		Empleado cajero = new Cajero(76, "Juanito", LocalDate.of(2024,4,2));
+		restaurante.agregarEmpleado(cajero);
+		restaurante.cargarValorHoraDeUnEmpleado(76, 100.0);
+		restaurante.cargarHorasTrabajadasDeUnEmpleado(76, 20);
+		restaurante.cargarSueldoEmpleado(76);
+
+		Double sueldoObtenido = restaurante.obtenerSueldoDeUnEmpleado(76);
+		Double sueldoDeseado = 20*100.0;
+
+		assertEquals(sueldoDeseado, sueldoObtenido);
+
+	}
+	
 }
