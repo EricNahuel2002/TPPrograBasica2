@@ -145,7 +145,11 @@ public class TestBase {
 		
 		Cliente cliente = new Cliente(001, "Bautista");
 		
-		ReservaCliente reservaCliente = new ReservaCliente(reserva, cliente);
+		Empleado mesero = new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12));
+		
+		restaurante.agregarEmpleado(mesero);
+		
+		ReservaCliente reservaCliente = new ReservaCliente(reserva, cliente, mesero);
 		
 		Boolean seAgregoReservaCliente = restaurante.agregarReservaCliente(reservaCliente);
 		
@@ -203,6 +207,36 @@ public class TestBase {
 
 		assertEquals(sueldoDeseado, sueldoObtenido);
 
+	}
+	
+	@Test
+	public void queSePuedaCalcularElSueldoDeUnMesero() {
+		Empleado mesero = new Mesero(112, "Juanito", LocalDate.of(2020,6,2));
+		restaurante.agregarEmpleado(mesero);
+		restaurante.cargarValorHoraDeUnEmpleado(112, 100.0);
+		restaurante.cargarHorasTrabajadasDeUnEmpleado(112, 20);
+
+		Cliente cliente = new Cliente(584, "nombreCliente");
+		restaurante.agregarCliente(cliente);
+
+		Reserva reserva = new Reserva(8546,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0));
+		restaurante.agregarReserva(reserva);
+
+		ReservaCliente reservaCliente = new ReservaCliente(reserva, cliente, mesero);
+		restaurante.agregarReservaCliente(reservaCliente);
+
+		Reserva reserva2 = new Reserva(854,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0)); 
+		restaurante.agregarReserva(reserva2);
+
+		ReservaCliente reservaCliente2 = new ReservaCliente(reserva2, cliente, mesero);
+		restaurante.agregarReservaCliente(reservaCliente2);
+
+		restaurante.cargarSueldoEmpleado(112);
+
+		Double sueldoObtenido = restaurante.obtenerSueldoDeUnEmpleado(112);
+		Double sueldoDeseado = 20 * 100.0 + mesero.calcularAniosDeAntiguedad()*1000 + 100;
+
+		assertEquals(sueldoDeseado, sueldoObtenido);
 	}
 	
 }

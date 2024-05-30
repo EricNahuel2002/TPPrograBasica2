@@ -57,7 +57,15 @@ public class Restaurante {
 
 
 	public Boolean agregarReservaCliente(ReservaCliente reservaCliente) {
-		return reservasClientes.add(reservaCliente);
+
+		Boolean reservaClienteAgregada = reservasClientes.add(reservaCliente);
+
+		if(reservaClienteAgregada) {
+			Mesero mesero = (Mesero)reservaCliente.getMesero();
+			mesero.incrementarCantidadPedidos();
+		}
+
+		return reservaClienteAgregada;
 	}
 
 

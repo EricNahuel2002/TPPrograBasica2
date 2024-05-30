@@ -9,7 +9,6 @@ public class Reserva {
 	private Integer id;
 	private LocalDate dia;
 	private LocalTime hora;
-	private Empleado mesero;
 
 	public Reserva(Integer id, LocalDate dia, LocalTime hora) {
 		this.id = id;
@@ -31,7 +30,7 @@ public class Reserva {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(dia, hora, id, mesero);
+		return Objects.hash(dia, hora, id);
 	}
 
 	@Override

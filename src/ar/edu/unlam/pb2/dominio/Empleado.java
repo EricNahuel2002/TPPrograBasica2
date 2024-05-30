@@ -2,6 +2,7 @@ package ar.edu.unlam.pb2.dominio;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Objects;
 
 public abstract class Empleado {
 
@@ -92,5 +93,25 @@ public abstract class Empleado {
 	public void setAnioIngreso(LocalDate anioIngreso) {
 		this.anioIngreso = anioIngreso;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(anioIngreso, codigo, nombre);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Empleado other = (Empleado) obj;
+		return Objects.equals(anioIngreso, other.anioIngreso) && Objects.equals(codigo, other.codigo)
+				&& Objects.equals(nombre, other.nombre);
+	}
+	
+	
 
 }

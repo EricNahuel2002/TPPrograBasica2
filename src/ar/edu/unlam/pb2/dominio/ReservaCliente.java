@@ -8,27 +8,29 @@ public class ReservaCliente {
 	private Cliente cliente;
 	private Empleado mesero;
 
-
-	public ReservaCliente(Reserva reserva, Cliente cliente) {
+	public ReservaCliente(Reserva reserva, Cliente cliente, Empleado mesero) {
 		this.reserva = reserva;
 		this.cliente = cliente;
-	}
-
-	public Reserva getPedido() {
-		return reserva;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setMesero(Empleado mesero) {
 		this.mesero = mesero;
 	}
 
 	public Empleado getMesero() {
 		return mesero;
 	}
+
+	public void setMesero(Empleado mesero) {
+		this.mesero = mesero;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
+
 
 	@Override
 	public int hashCode() {
