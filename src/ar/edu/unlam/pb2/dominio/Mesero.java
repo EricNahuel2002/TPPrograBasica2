@@ -9,13 +9,14 @@ public class Mesero extends Empleado {
 	public Mesero(Integer codigo, String nombre, LocalDate anioIngreso) {
 		super(codigo, nombre, anioIngreso);
 		this.cantidadPedidos = 0;
+		setValorPorAnioAntiguedad(1000.0);
 	}
 	//cantidad de pedidos
 	//propina o bono extra en base a la cantidad de pedidos
 
 	@Override
 	public Double calcularSueldo() {
-		return getHorasTrabajadas()*getValorHora() + calcularAniosDeAntiguedad()*1000 + calcularBonoPorCantidadDePedidos();
+		return getHorasTrabajadas()*getValorHora() + calcularAniosDeAntiguedad()*getValorPorAnioAntiguedad() + calcularBonoPorCantidadDePedidos();
 	}
 
 	public Double calcularBonoPorCantidadDePedidos() {

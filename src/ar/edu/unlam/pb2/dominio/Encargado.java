@@ -8,19 +8,22 @@ public class Encargado extends Empleado {
 
 	
 	private List<Empleado> meseros;
+	private Double valorPorEmpleadoACargo;
 	
 	public Encargado(Integer codigo, String nombre, LocalDate anioIngreso) {
 		super(codigo, nombre, anioIngreso);
 		this.meseros = new ArrayList<>();
+		setValorPorAnioAntiguedad(5000.0);
+		valorPorEmpleadoACargo = 500.0;
 	}
 	
 	@Override
 	public Double calcularSueldo() {
-		return getHorasTrabajadas()*getValorHora() + calcularAniosDeAntiguedad()*5000 + calcularExtraPorMeserosACargo();
+		return getHorasTrabajadas()*getValorHora() + calcularAniosDeAntiguedad()*getValorPorAnioAntiguedad() + calcularExtraPorMeserosACargo();
 	}
 
 	public Double calcularExtraPorMeserosACargo() {
-		return meseros.size() * 500.0;
+		return meseros.size() * valorPorEmpleadoACargo;
 	}
 
 	public Boolean agregarMeseroACargo(Empleado mesero) {

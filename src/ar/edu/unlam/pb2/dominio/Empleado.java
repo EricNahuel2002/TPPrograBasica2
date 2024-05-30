@@ -12,6 +12,7 @@ public abstract class Empleado {
 	private Double valorHora;
 	private Double sueldo;
 	private LocalDate anioIngreso;
+	private Double valorPorAnioAntiguedad;
 
 	
 	
@@ -22,10 +23,11 @@ public abstract class Empleado {
 		this.valorHora = 0.0;
 		this.sueldo = 0.0;
 		this.anioIngreso = anioIngreso;
+		this.valorPorAnioAntiguedad = 0.0;
 	}
 	
 	public abstract Double calcularSueldo();
-
+	
 	public Integer calcularAniosDeAntiguedad() {
 		LocalDate fechaActual = LocalDate.now();
 		Period periodo = Period.between(anioIngreso, fechaActual);
@@ -92,6 +94,16 @@ public abstract class Empleado {
 
 	public void setAnioIngreso(LocalDate anioIngreso) {
 		this.anioIngreso = anioIngreso;
+	}
+	
+	
+
+	public Double getValorPorAnioAntiguedad() {
+		return valorPorAnioAntiguedad;
+	}
+
+	public void setValorPorAnioAntiguedad(Double valorPorAnioAntiguedad) {
+		this.valorPorAnioAntiguedad = valorPorAnioAntiguedad;
 	}
 
 	@Override
