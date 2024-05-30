@@ -178,48 +178,131 @@ public class TestBase {
 		assertEquals(clienteABuscar, clienteObtenido);
 	}
 	
-	@Test
-	public void queSePuedaObtenerListaDeEmpleadosOrdenadoDeMayorAMenorPorSueldo() {
+	@ Test
+	public void queSePuedaOrdenarPorCodigoATodosLosEmpleadosQueTrabajanEnElrestauranteSinQueSeRepitan() {
+		Empleado mesero1 = new Mesero(1,"pimenta",LocalDate.of(2012, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero1);
 		
-		Empleado encargado = new Encargado (3,"magnolia",500.0,LocalDate.of(2002, 11,10),8);
-		this.restaurante.agregarEmpleado(encargado);
+		Empleado mesero2 = new Mesero(5,"pim",LocalDate.of(2013, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero2);
 		
-		Empleado encargado2 = new Encargado (6,"mag",700.0,LocalDate.of(2006,12,05),5);
-		this.restaurante.agregarEmpleado(encargado2);
+		Empleado mesero3 = new Mesero(7,"menta",LocalDate.of(2009, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero3);
 		
-		Integer codigo = 1;
-		String nombre ="cleo";
-		Double sueldo = 400.0;
-		LocalDate anio_ingreso = LocalDate.of(2004, 06, 12);
-		Empleado cajero = new Cajero(codigo,nombre,sueldo,anio_ingreso);
-		this.restaurante.agregarEmpleado(cajero);
+		Empleado mesero4 = new Mesero(3,"pimi",LocalDate.of(2012, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero4);
 		
-		Empleado cajero2 = new Cajero(7,"cleopatra",200.0,LocalDate.of(2014, 06, 10));
-		this.restaurante.agregarEmpleado(cajero2);
+		Empleado mesero5 = new Mesero(2,"pimenta",LocalDate.of(2012, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero5);
 		
-		Empleado mesero = new Mesero(2,"pimenta",300.0,LocalDate.of(2012, 04, 01));
-		this.restaurante.agregarEmpleado(mesero);
+		Empleado mesero6 = new Mesero(6,"pim",LocalDate.of(2013, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero6);
 		
-		Empleado mesero2 = new Mesero(5,"pim",100.0,LocalDate.of(2012, 04, 01));
-		this.restaurante.agregarEmpleado;
+		Empleado mesero7 = new Mesero(8,"menta",LocalDate.of(2009, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero7);
 		
-		// ejecucion
-		List<Empleado>empleadosObtenidos = this.restaurante.obtenerListaDeEmpleadosOrdenadoDeMayorAMenorPorSueldo();
+		Empleado mesero8 = new Mesero(4,"pimi",LocalDate.of(2012, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero8);
 		
-		// verificacion
-		Double precioEsperado1 = 700.0;
-		Double precioEsperado2 = 500.0;
-		Double precioEsperado3 = 400.0;
-		Double precioEsperado4 = 300.0;
-		Double precioEsperado5 = 200.0;
-		Double precioEsperado6 = 100.0;
+		Empleado mesero9 = new Mesero(4,"pimi",LocalDate.of(2012, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero9);
 		
-		assertEquals(precioEsperado1, (Double)empleadosObtenidos.get(0).getSueldo());
-		assertEquals(precioEsperado2, (Double)empleadosObtenidos.get(1).getSueldo());
-		assertEquals(precioEsperado3, (Double)empleadosObtenidos.get(2).getSueldo());
-		assertEquals(precioEsperado4, (Double)empleadosObtenidos.get(3).getSueldo());
-		assertEquals(precioEsperado5, (Double)empleadosObtenidos.get(4).getSueldo());
-		assertEquals(precioEsperado6, (Double)empleadosObtenidos.get(5).getSueldo());
+		TreeSet<Empleado> listaDeEmpleados = this.restaurante.obtenerListaDeEmpleadosOrdenadosSinQueSeRepitaElCodigo();
+		
+		// diferentes formas de comprabar el test 
+		// primera para ver si me devuelve el mismo tamanio 
+		assertEquals(8, listaDeEmpleados.size());
+		
+		//segunda para ver si el primero y el ultimo son iguales a los que ingrese
+		assertEquals(1,(int)listaDeEmpleados.first().getCodigo());
+		assertEquals(8, (int)listaDeEmpleados.last().getCodigo());
+		
+		// tercera y la mas segura es recorrer un forech }
+		int i = 0;
+		for (Empleado empleado : listaDeEmpleados) {
+			switch(i) {
+			case 0 : assertEquals(1, (int) empleado.getCodigo());
+			    break;
+			case 1 : assertEquals(2, (int) empleado.getCodigo());
+			    break;
+		    case 2 : assertEquals(3, (int) empleado.getCodigo());
+	        	break;
+		    case 3 : assertEquals(4, (int) empleado.getCodigo());
+		        break;
+	        case 4 : assertEquals(5, (int) empleado.getCodigo());
+	            break;
+	        case 5 : assertEquals(6, (int) empleado.getCodigo());
+             	break;
+            case 6 : assertEquals(7, (int) empleado.getCodigo());
+                break;
+            case 7 : assertEquals(8, (int) empleado.getCodigo());
+                break;
+			}
+			
+			i++;
+				
+		}
+		
 	}
+	
+	
+	@Test
+	public void queSePuedaOrdenarLaListaDeEmpleadosPorUnOrdenEspecificoSinQUeSeRepitaAlgunCodigoDescendentemente() {
+		Empleado mesero1 = new Mesero(1,"pimenta",LocalDate.of(2012, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero1);
+		
+		Empleado mesero2 = new Mesero(5,"pim",LocalDate.of(2013, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero2);
+		
+		Empleado mesero3 = new Mesero(7,"menta",LocalDate.of(2009, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero3);
+		
+		Empleado mesero4 = new Mesero(3,"pimi",LocalDate.of(2012, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero4);
+		
+		Empleado mesero5 = new Mesero(2,"pimenta",LocalDate.of(2012, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero5);
+		
+		Empleado mesero6 = new Mesero(6,"pim",LocalDate.of(2013, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero6);
+		
+		Empleado mesero7 = new Mesero(8,"menta",LocalDate.of(2009, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero7);
+		
+		Empleado mesero8 = new Mesero(4,"pimi",LocalDate.of(2012, 04, 01));
+		this.restaurante.agregarUnEmpleadoAlRestaurante(mesero8);
+		
+		TreeSet <Empleado> listaOrdenada = this.restaurante.obtenerListaDeEmpleadosOrdenadosPorUnOrdenEnEspecifico(new OrdenDescendiente());
+	    
+		assertEquals(8, listaOrdenada.size());
+		
+		assertEquals(8,(int) listaOrdenada.first().getCodigo());
+	    assertEquals(1, (int)listaOrdenada.last().getCodigo());
+	    
+	    int i =0;
+	    for (Empleado empleado : listaOrdenada) {
+			switch(i) {
+			case 0 : assertEquals(8, (int) empleado.getCodigo());
+			break;
+			case 1 : assertEquals(7, (int) empleado.getCodigo());
+			break;
+			case 2 : assertEquals(6, (int) empleado.getCodigo());
+			break;
+			case 3 : assertEquals(5, (int) empleado.getCodigo());
+			break;
+			case 4 : assertEquals(4, (int) empleado.getCodigo());
+			break;
+			case 5 : assertEquals(3, (int) empleado.getCodigo());
+			break;
+			case 6 : assertEquals(2, (int) empleado.getCodigo());
+			break;
+			case 7 : assertEquals(1, (int) empleado.getCodigo());
+			break;
+			}
+			i++;
+		}
+	}
+
+	
 	
 }

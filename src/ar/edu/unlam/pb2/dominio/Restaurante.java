@@ -69,13 +69,22 @@ public class Restaurante {
 		}
 		return null;
 	}
+	
+	// metodos de obtener 
 
-	@Override
-	// falta crear una interfaz 
-	public List<Empleado> obtenerListaDeTodosLosEmpleadosOrdenadoDeMayorAMenorPorSueldo() {
-		Collections.sort(empleados,(o1,o2) -> o2.getSueldo().compareTo(o1.getSueldo()));
-		return this.empleados;
+	public TreeSet<Empleado> obtenerListaDeEmpleadosOrdenadosSinQueSeRepitaElCodigo() {
+		TreeSet <Empleado> listaEmpleadosOrdenado = new TreeSet<>();
+		
+		listaEmpleadosOrdenado.addAll(this.empleados);
+		
+		return listaEmpleadosOrdenado;
 	}
-
+	
+	public TreeSet<Empleado> obtenerListaDeEmpleadosOrdenadosPorUnOrdenEnEspecifico( Comparator <Empleado> OrdenDescendiente) {
+		
+		TreeSet<Empleado> listaNoRepetida = new TreeSet <Empleado> (OrdenDescendiente);
+		listaNoRepetida.addAll(this.empleados);
+		return listaNoRepetida;
+	}
 	
 }
