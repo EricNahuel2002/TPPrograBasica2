@@ -178,4 +178,31 @@ public class TestBase {
 		assertEquals(clienteABuscar, clienteObtenido);
 	}
 	
+	@Test
+	public void queSePuedaCalcularElSueldoDeUnEncargado() {
+
+		Empleado encargado = new Encargado(123, "Julieta", LocalDate.of(2000,5,19));
+		restaurante.agregarEmpleado(encargado);
+
+		Empleado meseroA = new Mesero(189, "Flor", LocalDate.of(2007,7,30));
+		restaurante.agregarEmpleado(meseroA);
+		Empleado meseroB = new Mesero(7457, "Juana", LocalDate.of(2015,7,30));
+		restaurante.agregarEmpleado(meseroB);
+		Empleado meseroC = new Mesero(59, "Flor", LocalDate.of(2008,7,30));
+		restaurante.agregarEmpleado(meseroC);
+
+		restaurante.cargarMeseroACargoDelEncargado(encargado, meseroA);
+		restaurante.cargarMeseroACargoDelEncargado(encargado, meseroB);
+		restaurante.cargarMeseroACargoDelEncargado(encargado, meseroC);
+		restaurante.cargarValorHoraDeUnEmpleado(123, 100.0);
+		restaurante.cargarHorasTrabajadasDeUnEmpleado(123, 20); 
+		restaurante.cargarSueldoEmpleado(123);
+
+		Double sueldoObtenido = restaurante.obtenerSueldoDeUnEmpleado(123);
+		Double sueldoDeseado = 20 * 100.0 + encargado.calcularAniosDeAntiguedad()*5000 + 3*500;
+
+		assertEquals(sueldoDeseado, sueldoObtenido);
+
+	}
+	
 }

@@ -71,5 +71,57 @@ public class Restaurante {
 	}
 
 
+	public Boolean cargarMeseroACargoDelEncargado(Empleado encargado, Empleado mesero) {
+		if(buscarUnEmpleado(encargado.getCodigo()) != null && buscarUnEmpleado(mesero.getCodigo()) != null) {
+			return ((Encargado) encargado).agregarMeseroACargo(mesero);
+		}
+		return false;
+		
+	}
+
+
+	public void cargarValorHoraDeUnEmpleado(Integer idEmpleado, Double valorHora) {
+
+		Empleado empleado = buscarUnEmpleado(idEmpleado);
+
+		if(empleado != null) {
+			empleado.setValorHora(valorHora);
+		}
+
+	}
+
+	public void cargarHorasTrabajadasDeUnEmpleado(Integer idEmpleado, Integer horasTrabajadas) {
+
+		Empleado empleado = buscarUnEmpleado(idEmpleado);
+
+		if(empleado != null) {
+			empleado.setHorasTrabajadas(horasTrabajadas);
+		}
+
+	}
+
+	public Boolean cargarSueldoEmpleado(Integer idEmpleado) {
+		Empleado empleado = buscarUnEmpleado(idEmpleado);
+		Boolean cargado = false;
+
+		if(empleado != null) {
+			Double sueldo = empleado.calcularSueldo();
+			empleado.setSueldo(sueldo);
+			cargado = true;
+		}
+		return cargado;
+	}
+
+	public Double obtenerSueldoDeUnEmpleado(Integer idEmpleado) {
+		Empleado empleado = buscarUnEmpleado(idEmpleado);
+
+		if(empleado != null) {
+			return empleado.getSueldo();
+		}
+
+		return -1.0;
+
+	}
+
 	
 }
