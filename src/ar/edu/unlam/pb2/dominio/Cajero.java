@@ -10,15 +10,8 @@ public class Cajero extends Empleado {
 
 	@Override
 	public Double calcularSueldo() {
-		// TODO Auto-generated method stub
-		return null;
+		return getHorasTrabajadas()*getValorHora() + calcularAniosDeAntiguedad()*3000;
 	}
-	
-	
-	
-	
-	
-	
 	
 	
 }

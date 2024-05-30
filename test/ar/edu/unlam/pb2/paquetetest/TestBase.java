@@ -239,4 +239,19 @@ public class TestBase {
 		assertEquals(sueldoDeseado, sueldoObtenido);
 	}
 	
+	@Test
+	public void queSePuedaCalcularElSueldoDeUnCajero() {
+		Empleado cajero = new Cajero(76, "Juanito", LocalDate.of(2020,6,2));
+		restaurante.agregarEmpleado(cajero);
+		restaurante.cargarValorHoraDeUnEmpleado(76, 100.0);
+		restaurante.cargarHorasTrabajadasDeUnEmpleado(76, 20);
+		restaurante.cargarSueldoEmpleado(76);
+
+		Double sueldoObtenido = restaurante.obtenerSueldoDeUnEmpleado(76);
+		Double sueldoDeseado = 20*100.0 + cajero.calcularAniosDeAntiguedad()*3000.0 ;
+
+		assertEquals(sueldoDeseado, sueldoObtenido);
+
+	}
+	
 }
