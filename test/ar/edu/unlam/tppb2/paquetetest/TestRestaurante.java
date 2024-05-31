@@ -37,7 +37,17 @@ public class TestRestaurante {
 		
 	}
 	@Test
-	public void dadoQueUnClientePuedeHacerUnaReservaQueNoPuedaHaberLaMismaReservaCliente() {
+	public void dadoQueUnClientePuedeHacerUnaReservaQueNoPuedaHaberElMismoPedidoDosVeces() {
+		
+	}
+	
+	@Test
+	public void queSePuedaAsignarUnaMesaAUnaReserva() {
+		
+	}
+	
+	@Test
+	public void queUnaMesaTengaAsignadaVariosClientes() {
 		
 	}
 	
@@ -55,6 +65,17 @@ public class TestRestaurante {
 		
 		assertTrue(reservaClienteTomadaPorMesero);
 	}
+	@Test
+	public void dadoQueUnMeseroTomaLaReservaDeUnClienteSiNoSeLoEncuentraQueSeLanceUnaExceptionAdecuada() {
+		
+	}
+	
+	@Test
+	public void dadoQueUnMeseroTomaLaReservaDeUnClienteQueNoHayaElMismoPedidoDosVeces() {
+		
+	}
+	
+	
 	
 	@Test
 	public void queSePuedaAsignarEmpleadosAUnEncargado() {
@@ -72,5 +93,14 @@ public class TestRestaurante {
 		assertTrue(empleadoAsignadoAEncargado);
 		assertEquals(2,((Encargado) empleado).getEmpleadosACargo().size());
 	}
-
+	
+	public void dadoQueSePuedeAsignarEmpleadosAUnEncargadoSiNoSeEncuentraElEncargadoQueSeLanceException() {
+		
+	}
+	
+	public void dadoQueSePuedeAsignarEmpleadosAUnEncargadoSiUnEmpleadoYaFueAsignadoAEseEncargadoQueLanceException() {
+		
+	}
+	
+	
 }
