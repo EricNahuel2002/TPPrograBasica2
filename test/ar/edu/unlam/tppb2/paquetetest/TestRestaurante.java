@@ -23,9 +23,22 @@ public class TestRestaurante {
 		Cliente cliente = new Cliente(1,"Juan");
 		restaurante.agregarCliente(cliente);
 		
-		Boolean reservaRealizada = restaurante.realizarReservaCliente(reserva,cliente);
+		Boolean reservaRealizada = restaurante.realizarPedido(reserva,cliente);
 		
 		assertTrue(reservaRealizada);
+	}
+	
+	@Test
+	public void dadoQueUnClientePuedeHacerUnaReservaSiNoSeLoEncuentraQueSeLanceLaExceptionAdecuada() {
+		
+	}
+	@Test
+	public void dadoQueUnClientePuedeHacerUnaReservaSiNoSeEncuentraLaReservaQueSeLanceLaExceptionAdecuada() {
+		
+	}
+	@Test
+	public void dadoQueUnClientePuedeHacerUnaReservaQueNoPuedaHaberLaMismaReservaCliente() {
+		
 	}
 	
 	@Test
@@ -36,9 +49,9 @@ public class TestRestaurante {
 		restaurante.agregarCliente(cliente);
 		Reserva reserva = new Reserva(1,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0));
 		restaurante.agregarReserva(reserva);
-		restaurante.realizarReservaCliente(reserva,cliente);
+		restaurante.realizarPedido(reserva,cliente);
 		
-		Boolean reservaClienteTomadaPorMesero = restaurante.queUnMeseroTomeUnaReservaCliente(reserva,cliente,mesero);
+		Boolean reservaClienteTomadaPorMesero = restaurante.queUnMeseroTomeLaReservaDeUnCliente(reserva,cliente,mesero);
 		
 		assertTrue(reservaClienteTomadaPorMesero);
 	}

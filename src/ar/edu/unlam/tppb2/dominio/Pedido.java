@@ -2,14 +2,14 @@ package ar.edu.unlam.tppb2.dominio;
 
 import java.util.Objects;
 
-public class ReservaCliente {
+public class Pedido {
 	
 	private Reserva pedido;
 	private Cliente cliente;
 	private Empleado mesero;
 	//que una pedido tenga una COLECCION DE MESEROS
 
-	public ReservaCliente(Reserva pedido, Cliente cliente) {
+	public Pedido(Reserva pedido, Cliente cliente) {
 		this.pedido = pedido;
 		this.cliente = cliente;
 	}
@@ -43,7 +43,7 @@ public class ReservaCliente {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ReservaCliente other = (ReservaCliente) obj;
+		Pedido other = (Pedido) obj;
 		return Objects.equals(cliente, other.cliente) && Objects.equals(pedido, other.pedido);
 	}
 }

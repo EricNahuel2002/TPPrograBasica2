@@ -11,14 +11,14 @@ public class Restaurante implements IRestaurante{
 	private List<Empleado> empleados;
 	private List<Cliente> clientes;
 	private List<Reserva> reservas;
-	private List<ReservaCliente> reservasClientes;
+	private List<Pedido> pedidos;
 
 	public Restaurante(String nombreRestaurante) {
 		this.nombre = nombreRestaurante;
 		this.empleados = new ArrayList<>();
 		this.clientes = new ArrayList<>();
 		this.reservas = new ArrayList<>();
-		this.reservasClientes = new ArrayList<>();
+		this.pedidos = new ArrayList<>();
 	}
 	//cantidad de veces que un cliente fue al restaurante
 	//coleccion de clientes
@@ -95,8 +95,8 @@ public class Restaurante implements IRestaurante{
 	}
 	@Override
 	public Empleado obtenerElMeseroDelMes() {
-		Empleado mesero = reservasClientes.get(0).getMesero();
-		for(ReservaCliente rc: reservasClientes) {
+		Empleado mesero = pedidos.get(0).getMesero();
+		for(Pedido rc: pedidos) {
 			if(((Mesero) rc.getMesero()).getCantidadDePedidosTomados() > ((Mesero) mesero).getCantidadDePedidosTomados()) {
 				mesero = rc.getMesero();
 			}
@@ -106,8 +106,8 @@ public class Restaurante implements IRestaurante{
 	@Override
 	public HashSet<Cliente> obtenerLaCantidadDeClientesQueFueronAlRestaurante() {
 		HashSet<Cliente> clientes = new HashSet<>();
-		for(ReservaCliente rc: reservasClientes) {
-			clientes.add(rc.getCliente());
+		for(Pedido p: pedidos) {
+			clientes.add(p.getCliente());
 		}
 		return clientes;
 	}
@@ -135,23 +135,23 @@ public class Restaurante implements IRestaurante{
 		return reservas.add(reserva);
 	}
 
-	public Boolean realizarReservaCliente(Reserva reserva, Cliente cliente) {
+	public Boolean realizarPedido(Reserva reserva, Cliente cliente) {
 		Reserva reservaEncontrada = this.buscarReserva(reserva.getId());
 		Cliente clienteEncontrado = this.buscarUnCliente(cliente.getNumero());
 		//buscar reservacliente
 				//if(reservaClienteEncontrada == null){
 				// return false
 		if(reservaEncontrada != null && clienteEncontrado != null) {
-			ReservaCliente pc = this.buscarPedidoCliente(reservaEncontrada,clienteEncontrado);
+			Pedido pc = this.buscarPedidoCliente(reservaEncontrada,clienteEncontrado);
 			if(pc == null) {
-			ReservaCliente reservaCliente = new ReservaCliente(reservaEncontrada,clienteEncontrado);
-			return reservasClientes.add(reservaCliente);
+			Pedido reservaCliente = new Pedido(reservaEncontrada,clienteEncontrado);
+			return pedidos.add(reservaCliente);
 			}
 		}
 		return false;
 	}
-	private ReservaCliente buscarPedidoCliente(Reserva reservaEncontrada, Cliente clienteEncontrado) {
-		for(ReservaCliente pd :reservasClientes) {
+	private Pedido buscarPedidoCliente(Reserva reservaEncontrada, Cliente clienteEncontrado) {
+		for(Pedido pd :pedidos) {
 			if(pd.getPedido().equals(reservaEncontrada) && pd.getCliente().equals(clienteEncontrado)) {
 				return pd;
 			}
@@ -167,8 +167,8 @@ public class Restaurante implements IRestaurante{
 		return null;
 	}
 
-	public Boolean agregarReservaCliente(ReservaCliente rc) {
-		return reservasClientes.add(rc);
+	public Boolean agregarReservaCliente(Pedido rc) {
+		return pedidos.add(rc);
 	}
 
 	public List<Empleado> obtenerEncargados() {
@@ -183,7 +183,7 @@ public class Restaurante implements IRestaurante{
 
 	public List<Reserva> obtenerHistorialDeReservasDeUnCliente(Cliente cliente) {
 		List<Reserva> reservasDeUnCliente = new ArrayList<>();
-		for(ReservaCliente rc:reservasClientes) {
+		for(Pedido rc:pedidos) {
 			if(rc.getCliente().equals(cliente)) {
 				reservasDeUnCliente.add(rc.getPedido());
 			}
@@ -194,10 +194,10 @@ public class Restaurante implements IRestaurante{
 	//									reserva  n----n clientes sale clase intermedia
 	//									en 
 
-	public Boolean queUnMeseroTomeUnaReservaCliente(Reserva reserva, Cliente cliente, Empleado mesero) {
-		for(ReservaCliente pd: reservasClientes) {
-			if(pd.getPedido().equals(reserva) && pd.getCliente().equals(cliente)) {
-				pd.setMesero(mesero);
+	public Boolean queUnMeseroTomeLaReservaDeUnCliente(Reserva reserva, Cliente cliente, Empleado mesero) {
+		for(Pedido p: pedidos) {
+			if(p.getPedido().equals(reserva) && p.getCliente().equals(cliente)) {
+				p.setMesero(mesero);
 				((Mesero) mesero).incrementarCantidadDePedidosTomados();
 				return true;
 			}
