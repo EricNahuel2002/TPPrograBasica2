@@ -17,7 +17,7 @@ public class TestRestaurante {
 	}
 	
 	@Test
-	public void queUnClientePuedaHacerUnaReserva() {
+	public void queUnClientePuedaHacerUnaReserva() throws ClienteNoEncontradoException, ReservaNoEncontradaException, PedidoDuplicadoException {
 		Reserva reserva = new Reserva(1,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0));
 		restaurante.agregarReserva(reserva);
 		Cliente cliente = new Cliente(1,"Juan");
@@ -28,17 +28,31 @@ public class TestRestaurante {
 		assertTrue(reservaRealizada);
 	}
 	
-	@Test
-	public void dadoQueUnClientePuedeHacerUnaReservaSiNoSeLoEncuentraQueSeLanceLaExceptionAdecuada() {
+	@Test (expected = ClienteNoEncontradoException.class)
+	public void dadoQueUnClientePuedeHacerUnaReservaSiNoSeLoEncuentraQueSeLanceLaExceptionAdecuada() throws ClienteNoEncontradoException, ReservaNoEncontradaException, PedidoDuplicadoException {
+		Reserva reserva = new Reserva(1,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0));
+		restaurante.agregarReserva(reserva);
+		Cliente cliente = new Cliente(1,"Juan");
 		
+		restaurante.realizarPedido(reserva,cliente);
 	}
-	@Test
-	public void dadoQueUnClientePuedeHacerUnaReservaSiNoSeEncuentraLaReservaQueSeLanceLaExceptionAdecuada() {
+	@Test (expected = ReservaNoEncontradaException.class)
+	public void dadoQueUnClientePuedeHacerUnaReservaSiNoSeEncuentraLaReservaQueSeLanceLaExceptionAdecuada() throws ClienteNoEncontradoException, ReservaNoEncontradaException, PedidoDuplicadoException {
+		Reserva reserva = new Reserva(1,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0));
+		Cliente cliente = new Cliente(1,"Juan");
+		restaurante.agregarCliente(cliente);
 		
+		restaurante.realizarPedido(reserva,cliente);
 	}
-	@Test
-	public void dadoQueUnClientePuedeHacerUnaReservaQueNoPuedaHaberElMismoPedidoDosVeces() {
+	@Test (expected = PedidoDuplicadoException.class)
+	public void dadoQueUnClientePuedeHacerUnaReservaQueNoPuedaHaberElMismoPedidoDosVeces() throws ClienteNoEncontradoException, ReservaNoEncontradaException, PedidoDuplicadoException {
+		Reserva reserva = new Reserva(1,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0));
+		restaurante.agregarReserva(reserva);
+		Cliente cliente = new Cliente(1,"Juan");
+		restaurante.agregarCliente(cliente);
 		
+		restaurante.realizarPedido(reserva,cliente);
+		restaurante.realizarPedido(reserva,cliente);
 	}
 	
 	@Test
@@ -52,8 +66,8 @@ public class TestRestaurante {
 	}
 	
 	@Test
-	public void queUnMeseroTomeLaReservaDeUnCliente() {
-		Empleado mesero = new Mesero(15,"pepe",LocalDate.of(2009, 1, 5));
+	public void queUnMeseroTomeUnPedido() throws ClienteNoEncontradoException, ReservaNoEncontradaException, PedidoDuplicadoException, EmpleadoNoEncontradoException, PedidoYaTomado {
+		Mesero mesero = new Mesero(15,"pepe",LocalDate.of(2009, 1, 5));
 		restaurante.agregarEmpleado(mesero);
 		Cliente cliente = new Cliente(1,"Juan");
 		restaurante.agregarCliente(cliente);
@@ -61,27 +75,60 @@ public class TestRestaurante {
 		restaurante.agregarReserva(reserva);
 		restaurante.realizarPedido(reserva,cliente);
 		
-		Boolean reservaClienteTomadaPorMesero = restaurante.queUnMeseroTomeLaReservaDeUnCliente(reserva,cliente,mesero);
+		Boolean reservaClienteTomadaPorMesero = restaurante.queUnMeseroTomeUnPedido(reserva,cliente,mesero);
 		
 		assertTrue(reservaClienteTomadaPorMesero);
 	}
-	@Test
-	public void dadoQueUnMeseroTomaLaReservaDeUnClienteSiNoSeLoEncuentraQueSeLanceUnaExceptionAdecuada() {
+	
+	@Test (expected = EmpleadoNoEncontradoException.class)
+	public void dadoQueUnMeseroTomaLaReservaDeUnClienteSiNoSeLoEncuentraQueSeLanceUnaExceptionAdecuada() throws ClienteNoEncontradoException, ReservaNoEncontradaException, PedidoDuplicadoException, EmpleadoNoEncontradoException, PedidoYaTomado {
+		Mesero mesero = new Mesero(15,"pepe",LocalDate.of(2009, 1, 5));
+		Cliente cliente = new Cliente(1,"Juan");
+		restaurante.agregarCliente(cliente);
+		Reserva reserva = new Reserva(1,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0));
+		restaurante.agregarReserva(reserva);
+		restaurante.realizarPedido(reserva,cliente);
 		
+		restaurante.queUnMeseroTomeUnPedido(reserva,cliente,mesero);
 	}
 	
-	@Test
-	public void dadoQueUnMeseroTomaLaReservaDeUnClienteQueNoHayaElMismoPedidoDosVeces() {
+	@Test (expected = PedidoYaTomado.class)
+	public void dadoQueUnMeseroTomaUnPedidoSiEsePedidoYaFueTomadoPorOtroMeseroQueLanceException() throws ClienteNoEncontradoException, ReservaNoEncontradaException, PedidoDuplicadoException, EmpleadoNoEncontradoException, PedidoYaTomado {
+		Mesero mesero = new Mesero(15,"pepe",LocalDate.of(2009, 1, 5));
+		Mesero mesero2 = new Mesero(19,"Lucas",LocalDate.of(2009, 1, 5));
+		restaurante.agregarEmpleado(mesero);
+		restaurante.agregarEmpleado(mesero2);
+		Cliente cliente = new Cliente(1,"Juan");
+		restaurante.agregarCliente(cliente);
+		Reserva reserva = new Reserva(1,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0));
+		restaurante.agregarReserva(reserva);
+		restaurante.realizarPedido(reserva,cliente);
 		
+		restaurante.queUnMeseroTomeUnPedido(reserva,cliente,mesero);
+		restaurante.queUnMeseroTomeUnPedido(reserva,cliente,mesero2);
 	}
 	
 	
+	@Test (expected = PedidoDuplicadoException.class)
+	public void dadoQueUnMeseroTomaLaReservaDeUnClienteQueNoSeDeLaMismaCombinacionDeReservaClienteMeseroDosVeces() throws ClienteNoEncontradoException, ReservaNoEncontradaException, PedidoYaTomado, EmpleadoNoEncontradoException, PedidoDuplicadoException {
+		Mesero mesero = new Mesero(15,"pepe",LocalDate.of(2009, 1, 5));
+		restaurante.agregarEmpleado(mesero);
+		Cliente cliente = new Cliente(1,"Juan");
+		restaurante.agregarCliente(cliente);
+		Reserva reserva = new Reserva(1,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0));
+		restaurante.agregarReserva(reserva);
+		restaurante.realizarPedido(reserva,cliente);
+		
+		restaurante.queUnMeseroTomeUnPedido(reserva,cliente,mesero);
+		restaurante.queUnMeseroTomeUnPedido(reserva,cliente,mesero);
+	}
+	
 	
 	@Test
-	public void queSePuedaAsignarEmpleadosAUnEncargado() {
-		Empleado encargado = new Encargado(15,"pepe",LocalDate.of(2009, 1, 5));
-		Empleado mesero = new Mesero(15,"pepe",LocalDate.of(2009, 1, 5));
-		Empleado mesero2 = new Mesero(12,"lucas",LocalDate.of(2008, 5, 5));
+	public void queSePuedaAsignarEmpleadosAUnEncargado() throws EmpleadoNoEncontradoException, EmpleadoYaAsignadoAEncargado {
+		Encargado encargado = new Encargado(15,"pepe",LocalDate.of(2009, 1, 5));
+		Mesero mesero = new Mesero(15,"pepe",LocalDate.of(2009, 1, 5));
+		Mesero mesero2 = new Mesero(12,"lucas",LocalDate.of(2008, 5, 5));
 		restaurante.agregarEmpleado(encargado);
 		restaurante.agregarEmpleado(mesero);
 		restaurante.agregarEmpleado(mesero2);
@@ -94,12 +141,25 @@ public class TestRestaurante {
 		assertEquals(2,((Encargado) empleado).getEmpleadosACargo().size());
 	}
 	
-	public void dadoQueSePuedeAsignarEmpleadosAUnEncargadoSiNoSeEncuentraElEncargadoQueSeLanceException() {
+	
+	@Test (expected = EmpleadoNoEncontradoException.class)
+	public void dadoQueSePuedeAsignarEmpleadosAUnEncargadoSiNoSeEncuentraElEncargadoQueSeLanceException() throws EmpleadoNoEncontradoException, EmpleadoYaAsignadoAEncargado {
+		Encargado encargado = new Encargado(15,"pepe",LocalDate.of(2009, 1, 5));
+		Mesero mesero = new Mesero(16,"pepe",LocalDate.of(2009, 1, 5));
+		restaurante.agregarEmpleado(mesero);
 		
+		restaurante.asignarEmpleadoAEncargado(encargado,mesero);
 	}
 	
-	public void dadoQueSePuedeAsignarEmpleadosAUnEncargadoSiUnEmpleadoYaFueAsignadoAEseEncargadoQueLanceException() {
+	@Test (expected = EmpleadoYaAsignadoAEncargado.class)
+	public void dadoQueSePuedeAsignarEmpleadosAUnEncargadoSiUnEmpleadoYaFueAsignadoAEseEncargadoQueLanceException() throws EmpleadoNoEncontradoException, EmpleadoYaAsignadoAEncargado {
+		Encargado encargado = new Encargado(15,"pepe",LocalDate.of(2009, 1, 5));
+		restaurante.agregarEmpleado(encargado);
+		Mesero mesero = new Mesero(16,"pepe",LocalDate.of(2009, 1, 5));
+		restaurante.agregarEmpleado(mesero);
 		
+		restaurante.asignarEmpleadoAEncargado(encargado,mesero);
+		restaurante.asignarEmpleadoAEncargado(encargado,mesero);
 	}
 	
 	

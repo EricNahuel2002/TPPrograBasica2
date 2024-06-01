@@ -4,18 +4,18 @@ import java.util.Objects;
 
 public class Pedido {
 	
-	private Reserva pedido;
+	private Reserva reserva;
 	private Cliente cliente;
 	private Empleado mesero;
 	//que una pedido tenga una COLECCION DE MESEROS
 
-	public Pedido(Reserva pedido, Cliente cliente) {
-		this.pedido = pedido;
+	public Pedido(Reserva reserva, Cliente cliente) {
+		this.reserva = reserva;
 		this.cliente = cliente;
 	}
 
-	public Reserva getPedido() {
-		return pedido;
+	public Reserva getReserva() {
+		return reserva;
 	}
 
 	public Cliente getCliente() {
@@ -32,7 +32,7 @@ public class Pedido {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(cliente, pedido);
+		return Objects.hash(cliente, mesero, reserva);
 	}
 
 	@Override
@@ -44,6 +44,9 @@ public class Pedido {
 		if (getClass() != obj.getClass())
 			return false;
 		Pedido other = (Pedido) obj;
-		return Objects.equals(cliente, other.cliente) && Objects.equals(pedido, other.pedido);
+		return Objects.equals(cliente, other.cliente) && Objects.equals(mesero, other.mesero)
+				&& Objects.equals(reserva, other.reserva);
 	}
+
+	
 }
