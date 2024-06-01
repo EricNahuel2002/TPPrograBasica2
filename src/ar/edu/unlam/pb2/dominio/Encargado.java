@@ -1,4 +1,4 @@
-package ar.edu.unlam.tppb2.dominio;
+package ar.edu.unlam.pb2.dominio;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

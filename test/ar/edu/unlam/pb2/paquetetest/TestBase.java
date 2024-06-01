@@ -1,4 +1,4 @@
-package ar.edu.unlam.tppb2.paquetetest;
+package ar.edu.unlam.pb2.paquetetest;
 import static org.junit.Assert.*;
 
 import java.time.LocalDate;
@@ -6,7 +6,8 @@ import java.time.LocalTime;
 
 import org.junit.Before;
 import org.junit.Test;
-import ar.edu.unlam.tppb2.dominio.*;
+
+import ar.edu.unlam.pb2.dominio.*;
 public class TestBase {
 	
 	private Restaurante restaurante;
