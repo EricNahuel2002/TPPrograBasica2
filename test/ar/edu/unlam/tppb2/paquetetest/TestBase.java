@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 import ar.edu.unlam.tppb2.dominio.*;
-public class TestRestaurante {
+public class TestBase {
 	
 	private Restaurante restaurante;
 	
