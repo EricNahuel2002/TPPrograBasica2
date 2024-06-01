@@ -13,6 +13,7 @@ import org.junit.Test;
 import ar.edu.unlam.pb2.dominio.Cajero;
 import ar.edu.unlam.pb2.dominio.Cliente;
 import ar.edu.unlam.pb2.dominio.Empleado;
+import ar.edu.unlam.pb2.dominio.EmpleadoNoEncontradoException;
 import ar.edu.unlam.pb2.dominio.Encargado;
 import ar.edu.unlam.pb2.dominio.Mesero;
 import ar.edu.unlam.pb2.dominio.Reserva;
@@ -183,7 +184,7 @@ public class TestBase {
 	}
 	
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnEncargado() {
+	public void queSePuedaCalcularElSueldoDeUnEncargado() throws EmpleadoNoEncontradoException {
 
 		Empleado encargado = new Encargado(123, "Julieta", LocalDate.of(2000,5,19));
 		restaurante.agregarEmpleado(encargado);
@@ -210,7 +211,7 @@ public class TestBase {
 	}
 	
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnMesero() {
+	public void queSePuedaCalcularElSueldoDeUnMesero() throws EmpleadoNoEncontradoException {
 		Empleado mesero = new Mesero(112, "Juanito", LocalDate.of(2020,6,2));
 		restaurante.agregarEmpleado(mesero);
 		restaurante.cargarValorHoraDeUnEmpleado(112, 100.0);
@@ -240,7 +241,7 @@ public class TestBase {
 	}
 	
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnCajero() {
+	public void queSePuedaCalcularElSueldoDeUnCajero() throws EmpleadoNoEncontradoException {
 		Empleado cajero = new Cajero(76, "Juanito", LocalDate.of(2020,6,2));
 		restaurante.agregarEmpleado(cajero);
 		restaurante.cargarValorHoraDeUnEmpleado(76, 100.0);
@@ -255,7 +256,7 @@ public class TestBase {
 	}
 	
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnEncargadoSinEmpleadosACargo() {
+	public void queSePuedaCalcularElSueldoDeUnEncargadoSinEmpleadosACargo() throws EmpleadoNoEncontradoException {
 
 		Empleado encargado = new Encargado(123, "Julieta", LocalDate.of(2000,5,19));
 		restaurante.agregarEmpleado(encargado);
@@ -272,7 +273,7 @@ public class TestBase {
 	}
 
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnMeseroSinReservasRealizadas() {
+	public void queSePuedaCalcularElSueldoDeUnMeseroSinReservasRealizadas() throws EmpleadoNoEncontradoException {
 		Empleado mesero = new Mesero(112, "Juanito", LocalDate.of(2020,6,2));
 		restaurante.agregarEmpleado(mesero);
 		restaurante.cargarValorHoraDeUnEmpleado(112, 100.0);
@@ -287,7 +288,7 @@ public class TestBase {
 	}
 
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnCajeroSinAniosDeAntiguedad() {
+	public void queSePuedaCalcularElSueldoDeUnCajeroSinAniosDeAntiguedad() throws EmpleadoNoEncontradoException {
 		Empleado cajero = new Cajero(76, "Juanito", LocalDate.of(2024,4,2));
 		restaurante.agregarEmpleado(cajero);
 		restaurante.cargarValorHoraDeUnEmpleado(76, 100.0);

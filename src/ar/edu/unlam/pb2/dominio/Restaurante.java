@@ -120,16 +120,14 @@ public class Restaurante {
 		return cargado;
 	}
 
-	public Double obtenerSueldoDeUnEmpleado(Integer idEmpleado) {
+	public Double obtenerSueldoDeUnEmpleado(Integer idEmpleado) throws EmpleadoNoEncontradoException {
 		Empleado empleado = buscarUnEmpleado(idEmpleado);
 
-		if(empleado != null) {
-			return empleado.getSueldo();
-		}
+		if (empleado != null) {
+            return empleado.getSueldo();
+        }
 
-		return -1.0;
-
-	}
-
+        throw new EmpleadoNoEncontradoException("Empleado con ID " + idEmpleado + " no existe.");
+    }
 	
 }
