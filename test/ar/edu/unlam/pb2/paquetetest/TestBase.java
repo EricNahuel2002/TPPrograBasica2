@@ -10,17 +10,7 @@ import java.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import ar.edu.unlam.pb2.dominio.Cajero;
-import ar.edu.unlam.pb2.dominio.Cliente;
-import ar.edu.unlam.pb2.dominio.Empleado;
-import ar.edu.unlam.pb2.dominio.EmpleadoNoEncontradoException;
-import ar.edu.unlam.pb2.dominio.Encargado;
-import ar.edu.unlam.pb2.dominio.Mesero;
-import ar.edu.unlam.pb2.dominio.Reserva;
-import ar.edu.unlam.pb2.dominio.ReservaCliente;
-import ar.edu.unlam.pb2.dominio.Restaurante;
-
-
+import ar.edu.unlam.pb2.dominio.*;
 
 public class TestBase {
 	
@@ -146,11 +136,7 @@ public class TestBase {
 		
 		Cliente cliente = new Cliente(001, "Bautista");
 		
-		Empleado mesero = new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12));
-		
-		restaurante.agregarEmpleado(mesero);
-		
-		ReservaCliente reservaCliente = new ReservaCliente(reserva, cliente, mesero);
+		ReservaCliente reservaCliente = new ReservaCliente(reserva, cliente);
 		
 		Boolean seAgregoReservaCliente = restaurante.agregarReservaCliente(reservaCliente);
 		
@@ -223,14 +209,20 @@ public class TestBase {
 		Reserva reserva = new Reserva(8546,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0));
 		restaurante.agregarReserva(reserva);
 
-		ReservaCliente reservaCliente = new ReservaCliente(reserva, cliente, mesero);
+		ReservaCliente reservaCliente = new ReservaCliente(reserva, cliente);
 		restaurante.agregarReservaCliente(reservaCliente);
+		
+		Pedido pedido = new Pedido (reservaCliente, mesero);
+		restaurante.agregarPedido(pedido);
 
 		Reserva reserva2 = new Reserva(854,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0)); 
 		restaurante.agregarReserva(reserva2);
 
-		ReservaCliente reservaCliente2 = new ReservaCliente(reserva2, cliente, mesero);
+		ReservaCliente reservaCliente2 = new ReservaCliente(reserva2, cliente);
 		restaurante.agregarReservaCliente(reservaCliente2);
+		
+		Pedido pedido2 = new Pedido (reservaCliente2, mesero);
+		restaurante.agregarPedido(pedido2);
 
 		restaurante.cargarSueldoEmpleado(112);
 
@@ -273,7 +265,7 @@ public class TestBase {
 	}
 
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnMeseroSinReservasRealizadas() throws EmpleadoNoEncontradoException {
+	public void queSePuedaCalcularElSueldoDeUnMeseroSinPedidosRealizados() throws EmpleadoNoEncontradoException {
 		Empleado mesero = new Mesero(112, "Juanito", LocalDate.of(2020,6,2));
 		restaurante.agregarEmpleado(mesero);
 		restaurante.cargarValorHoraDeUnEmpleado(112, 100.0);

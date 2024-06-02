@@ -6,21 +6,12 @@ public class ReservaCliente {
 	
 	private Reserva reserva;
 	private Cliente cliente;
-	private Empleado mesero;
 
-	public ReservaCliente(Reserva reserva, Cliente cliente, Empleado mesero) {
+	public ReservaCliente(Reserva reserva, Cliente cliente) {
 		this.reserva = reserva;
 		this.cliente = cliente;
-		this.mesero = mesero;
 	}
 
-	public Empleado getMesero() {
-		return mesero;
-	}
-
-	public void setMesero(Empleado mesero) {
-		this.mesero = mesero;
-	}
 
 	public Cliente getCliente() {
 		return cliente;

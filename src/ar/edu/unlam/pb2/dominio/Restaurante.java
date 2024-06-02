@@ -9,6 +9,7 @@ public class Restaurante {
 	private List<Cliente> clientes;
 	private List<Reserva> reservas;
 	private List<ReservaCliente> reservasClientes;
+	private List<Pedido> pedidos;
 
 	public Restaurante(String nombreRestaurante) {
 		this.nombre = nombreRestaurante;
@@ -16,6 +17,7 @@ public class Restaurante {
 		this.clientes = new ArrayList<>();
 		this.reservas = new ArrayList<>();
 		this.reservasClientes = new ArrayList<>();
+		this.pedidos = new ArrayList<>();
 	}
 	
 
@@ -60,12 +62,18 @@ public class Restaurante {
 
 		Boolean reservaClienteAgregada = reservasClientes.add(reservaCliente);
 
-		if(reservaClienteAgregada) {
-			Mesero mesero = (Mesero)reservaCliente.getMesero();
+		return reservaClienteAgregada;
+	}
+
+	public Boolean agregarPedido(Pedido pedido) {
+		Boolean pedidoAgregado = pedidos.add(pedido);
+		
+		if(pedidoAgregado) {
+			Mesero mesero = (Mesero)pedido.getMesero();
 			mesero.incrementarCantidadPedidos();
 		}
-
-		return reservaClienteAgregada;
+		
+		return pedidoAgregado;
 	}
 
 
