@@ -6,31 +6,34 @@ public class ReservaCliente {
 	
 	private Reserva reserva;
 	private Cliente cliente;
-	private Empleado mesero;
 
-	public ReservaCliente(Reserva reserva, Cliente cliente, Empleado mesero) {
+	public ReservaCliente(Reserva reserva, Cliente cliente) {
 		this.reserva = reserva;
 		this.cliente = cliente;
-		this.mesero = mesero;
 	}
 
-	public Empleado getMesero() {
-		return mesero;
+	public ReservaCliente(Reserva reserva, Cliente cliente, Mesa mesa) {
+		this.reserva = reserva;
+		this.cliente = cliente;
+		this.reserva.setMesa(mesa);
 	}
 
-	public void setMesero(Empleado mesero) {
-		this.mesero = mesero;
+	public ReservaCliente(Reserva reserva, Cliente cliente, Empleado mesero) {
+		
+	}
+
+	public Reserva getReserva() {
+		return reserva;
 	}
 
 	public Cliente getCliente() {
 		return cliente;
 	}
 
+	
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
-
-
 
 	@Override
 	public int hashCode() {
@@ -48,4 +51,5 @@ public class ReservaCliente {
 		ReservaCliente other = (ReservaCliente) obj;
 		return Objects.equals(cliente, other.cliente) && Objects.equals(reserva, other.reserva);
 	}
+
 }

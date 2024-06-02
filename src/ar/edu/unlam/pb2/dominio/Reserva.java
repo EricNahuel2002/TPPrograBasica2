@@ -5,10 +5,11 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 public class Reserva {
-	
+
 	private Integer id;
 	private LocalDate dia;
 	private LocalTime hora;
+	private Mesa mesa;
 
 	public Reserva(Integer id, LocalDate dia, LocalTime hora) {
 		this.id = id;
@@ -44,4 +45,13 @@ public class Reserva {
 		Reserva other = (Reserva) obj;
 		return Objects.equals(id, other.id);
 	}
+
+	public void setMesa(Mesa mesa) {
+		this.mesa = mesa;
+	}
+
+	public Mesa getMesa() {
+		return mesa;
+	}
+	
 }

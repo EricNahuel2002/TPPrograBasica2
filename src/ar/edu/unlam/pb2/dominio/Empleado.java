@@ -27,7 +27,6 @@ public abstract class Empleado implements Comparable<Empleado> {
 	}
 	
 	public abstract Double calcularSueldo();
-//>>>>>>> e2b761878c31bf6f1521a3a617659efa0ea693e3
 	
 	@Override
 	public int compareTo(Empleado o) {

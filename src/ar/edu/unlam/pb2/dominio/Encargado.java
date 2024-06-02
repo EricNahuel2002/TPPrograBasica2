@@ -7,12 +7,12 @@ import java.util.List;
 public class Encargado extends Empleado {
 
 	
-	private List<Empleado> meseros;
+	private List<Empleado> empleadosACargo;
 	private Double valorPorEmpleadoACargo;
 	
 	public Encargado(Integer codigo, String nombre, LocalDate anioIngreso) {
 		super(codigo, nombre, anioIngreso);
-		this.meseros = new ArrayList<>();
+		this.empleadosACargo = new ArrayList<>();
 		setValorPorAnioAntiguedad(5000.0);
 		valorPorEmpleadoACargo = 500.0;
 	}
@@ -23,12 +23,15 @@ public class Encargado extends Empleado {
 	}
 
 	public Double calcularExtraPorMeserosACargo() {
-		return meseros.size() * valorPorEmpleadoACargo;
+		return empleadosACargo.size() * valorPorEmpleadoACargo;
 	}
 
-	public Boolean agregarMeseroACargo(Empleado mesero) {
+	public List<Empleado> getEmpleadosACargo() {
+		return empleadosACargo;
+	}
 
-		return meseros.add(mesero);
+	public Boolean asignarEmpleado(Empleado mesero) {
+		return empleadosACargo.add(mesero);
 	}
 	
 	
