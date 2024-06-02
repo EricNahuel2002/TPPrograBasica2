@@ -7,19 +7,11 @@ public class ReservaCliente {
 	private Reserva reserva;
 	private Cliente cliente;
 
-	public ReservaCliente(Reserva reserva, Cliente cliente) {
-		this.reserva = reserva;
-		this.cliente = cliente;
-	}
 
 	public ReservaCliente(Reserva reserva, Cliente cliente, Mesa mesa) {
 		this.reserva = reserva;
 		this.cliente = cliente;
 		this.reserva.setMesa(mesa);
-	}
-
-	public ReservaCliente(Reserva reserva, Cliente cliente, Empleado mesero) {
-		
 	}
 
 	public Reserva getReserva() {

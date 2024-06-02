@@ -38,10 +38,6 @@ public class Restaurante implements IRestaurante {
 		}
 		return null;
 	}
-	// cantidad de veces que un cliente fue al restaurante
-	// coleccion de clientes
-	// coleccion de empleados
-
 
 	public Boolean agregarEmpleado(Empleado empleado) {
 	    Empleado empleadoEncontrado = this.buscarUnEmpleado(empleado.getCodigo());
@@ -71,22 +67,27 @@ public class Restaurante implements IRestaurante {
 	}
 
 
-//	public Boolean agregarReservaCliente(ReservaCliente reservaCliente) {
-//
-//		Boolean reservaClienteAgregada = reservasClientes.add(reservaCliente);
-//
-//		if(reservaClienteAgregada) {
-//			Mesero mesero = (Mesero)reservaCliente.getMesero();
-//			mesero.incrementarCantidadPedidos();
-//		}
-//
-//		return reservaClienteAgregada;
-//	}
+	public Boolean agregarReservaCliente(ReservaCliente reservaCliente) {
 
-	@Override
-	public Cliente buscarUnCliente(Integer id) {
-		for (Cliente cliente : clientes) {
-			if (cliente.getNumero().equals(id)) {
+		Boolean reservaClienteAgregada = reservasClientes.add(reservaCliente);
+		return reservaClienteAgregada;
+	}
+
+	public Boolean agregarPedido(Pedido pedido) {
+		Boolean pedidoAgregado = pedidos.add(pedido);
+		
+		if(pedidoAgregado) {
+			Mesero mesero = (Mesero)pedido.getMesero();
+			mesero.incrementarCantidadPedidos();
+		}
+		
+		return pedidoAgregado;
+	}
+
+
+	public Cliente buscarUnCliente(Integer numero) {
+		for(Cliente cliente: clientes) {
+			if(cliente.getNumero().equals(numero)) {
 				return cliente;
 			}
 		}
@@ -136,17 +137,15 @@ public class Restaurante implements IRestaurante {
 		return cargado;
 	}
 
-	public Double obtenerSueldoDeUnEmpleado(Integer idEmpleado) {
+	public Double obtenerSueldoDeUnEmpleado(Integer idEmpleado) throws EmpleadoNoEncontradoException {
 		Empleado empleado = buscarUnEmpleado(idEmpleado);
+		if (empleado != null) {
+            return empleado.getSueldo();
+        }
 
-		if(empleado != null) {
-			return empleado.getSueldo();
-		}
+        throw new EmpleadoNoEncontradoException("Empleado con ID " + idEmpleado + " no existe.");
+    }
 
-		return -1.0;
-
-	}
-	
 	// metodos obtener 
 	public TreeSet<Empleado> obtenerListaDeEmpleadosOrdenadosAscendenteSinQueSeRepitaElCodigo() {
 		TreeSet <Empleado> listaEmpleadosOrdenado = new TreeSet<>();
@@ -325,7 +324,7 @@ public class Restaurante implements IRestaurante {
 	private void validacionEmpleadoNoEncontrado(Empleado empleado) throws EmpleadoNoEncontradoException {
 		Empleado empleadoEncontrado = this.buscarUnEmpleado(empleado.getCodigo());
 		if (empleadoEncontrado == null) {
-			throw new EmpleadoNoEncontradoException();
+			throw new EmpleadoNoEncontradoException("El empleado no existe");
 		}
 	}
 

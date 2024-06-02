@@ -14,12 +14,8 @@ import java.util.TreeSet;
 
 import org.junit.Before;
 import org.junit.Test;
-
-
 import ar.edu.unlam.pb2.dominio.*;
 import ar.edu.unlam.pb2.paquetetest.*;
-
-
 
 public class TestBase {
 	
@@ -138,23 +134,22 @@ public class TestBase {
 		assertTrue(seAgregoReserva);
 	}
 	
-//	@Test
-//	public void queSePuedaAgregarUnaReservaClienteAlRestaurante() { 
-//		
-//		Reserva reserva = new Reserva(001, LocalDate.of(2024, 5, 28), LocalTime.of(21, 0));
-//		
-//		Cliente cliente = new Cliente(001, "Bautista");
-//		
-//		Empleado mesero = new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12));
-//		
-//		restaurante.agregarEmpleado(mesero);
-//		
-//		ReservaCliente reservaCliente = new ReservaCliente(reserva, cliente, mesero);
-//		
-//		Boolean seAgregoReservaCliente = restaurante.agregarReservaCliente(reservaCliente);
-//		
-//		assertTrue(seAgregoReservaCliente);
-//	}
+	@Test
+	public void queSePuedaAgregarUnaReservaClienteAlRestaurante() { 
+		
+		Reserva reserva = new Reserva(001, LocalDate.of(2024, 5, 28), LocalTime.of(21, 0));
+		
+		Cliente cliente = new Cliente(001, "Bautista");
+		
+		Mesa mesa = new Mesa(123);
+		
+		ReservaCliente reservaCliente = new ReservaCliente(reserva, cliente, mesa);
+		
+		Boolean seAgregoReservaCliente = restaurante.agregarReservaCliente(reservaCliente);
+		
+		assertTrue(seAgregoReservaCliente);
+	}
+
 	
 	
 	@Test
@@ -185,7 +180,7 @@ public class TestBase {
 
 	// metodos calcular sueldo
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnEncargado() {
+	public void queSePuedaCalcularElSueldoDeUnEncargado() throws EmpleadoNoEncontradoException {
 
 		Empleado encargado = new Encargado(123, "Julieta", LocalDate.of(2000,5,19));
 		restaurante.agregarEmpleado(encargado);
@@ -210,39 +205,47 @@ public class TestBase {
 		assertEquals(sueldoDeseado, sueldoObtenido);
 
 	}
-	
-//	@Test
-//	public void queSePuedaCalcularElSueldoDeUnMesero() {
-//		Empleado mesero = new Mesero(112, "Juanito", LocalDate.of(2020,6,2));
-//		restaurante.agregarEmpleado(mesero);
-//		restaurante.cargarValorHoraDeUnEmpleado(112, 100.0);
-//		restaurante.cargarHorasTrabajadasDeUnEmpleado(112, 20);
-//
-//		Cliente cliente = new Cliente(584, "nombreCliente");
-//		restaurante.agregarCliente(cliente);
-//
-//		Reserva reserva = new Reserva(8546,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0));
-//		restaurante.agregarReserva(reserva);
-//
-//		ReservaCliente reservaCliente = new ReservaCliente(reserva, cliente, mesero);
-//		restaurante.agregarReservaCliente(reservaCliente);
-//
-//		Reserva reserva2 = new Reserva(854,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0)); 
-//		restaurante.agregarReserva(reserva2);
-//
-//		ReservaCliente reservaCliente2 = new ReservaCliente(reserva2, cliente, mesero);
-//		restaurante.agregarReservaCliente(reservaCliente2);
-//
-//		restaurante.cargarSueldoEmpleado(112);
-//
-//		Double sueldoObtenido = restaurante.obtenerSueldoDeUnEmpleado(112);
-//		Double sueldoDeseado = 20 * 100.0 + mesero.calcularAniosDeAntiguedad()*1000 + 100;
-//
-//		assertEquals(sueldoDeseado, sueldoObtenido);
-//	}
+
+	@Test
+	public void queSePuedaCalcularElSueldoDeUnMesero() throws EmpleadoNoEncontradoException {
+		Empleado mesero = new Mesero(112, "Juanito", LocalDate.of(2020,6,2));
+		restaurante.agregarEmpleado(mesero);
+		restaurante.cargarValorHoraDeUnEmpleado(112, 100.0);
+		restaurante.cargarHorasTrabajadasDeUnEmpleado(112, 20);
+
+		Cliente cliente = new Cliente(584, "nombreCliente");
+		restaurante.agregarCliente(cliente);
+
+		Reserva reserva = new Reserva(8546,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0));
+		restaurante.agregarReserva(reserva);
+		
+		Mesa mesa = new Mesa(123);
+		ReservaCliente reservaCliente = new ReservaCliente(reserva, cliente, mesa);
+		restaurante.agregarReservaCliente(reservaCliente);
+		
+		Pedido pedido = new Pedido (reservaCliente, mesero);
+		restaurante.agregarPedido(pedido);
+
+		Reserva reserva2 = new Reserva(854,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0)); 
+		restaurante.agregarReserva(reserva2);
+
+		Mesa mesa2 = new Mesa(21);
+		ReservaCliente reservaCliente2 = new ReservaCliente(reserva2, cliente, mesa2);
+		restaurante.agregarReservaCliente(reservaCliente2);
+		
+		Pedido pedido2 = new Pedido (reservaCliente2, mesero);
+		restaurante.agregarPedido(pedido2);
+
+		restaurante.cargarSueldoEmpleado(112);
+
+		Double sueldoObtenido = restaurante.obtenerSueldoDeUnEmpleado(112);
+		Double sueldoDeseado = 20 * 100.0 + mesero.calcularAniosDeAntiguedad()*1000 + 100;
+
+		assertEquals(sueldoDeseado, sueldoObtenido);
+	}
 	
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnCajero() {
+	public void queSePuedaCalcularElSueldoDeUnCajero() throws EmpleadoNoEncontradoException {
 		Empleado cajero = new Cajero(76, "Juanito", LocalDate.of(2020,6,2));
 		restaurante.agregarEmpleado(cajero);
 		restaurante.cargarValorHoraDeUnEmpleado(76, 100.0);
@@ -257,7 +260,7 @@ public class TestBase {
 	}
 	
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnEncargadoSinEmpleadosACargo() {
+	public void queSePuedaCalcularElSueldoDeUnEncargadoSinEmpleadosACargo() throws EmpleadoNoEncontradoException {
 
 		Empleado encargado = new Encargado(123, "Julieta", LocalDate.of(2000,5,19));
 		restaurante.agregarEmpleado(encargado);
@@ -274,7 +277,7 @@ public class TestBase {
 	}
 
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnMeseroSinReservasRealizadas() {
+	public void queSePuedaCalcularElSueldoDeUnMeseroSinPedidosRealizados() throws EmpleadoNoEncontradoException {
 		Empleado mesero = new Mesero(112, "Juanito", LocalDate.of(2020,6,2));
 		restaurante.agregarEmpleado(mesero);
 		restaurante.cargarValorHoraDeUnEmpleado(112, 100.0);
@@ -289,7 +292,7 @@ public class TestBase {
 	}
 
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnCajeroSinAniosDeAntiguedad() {
+	public void queSePuedaCalcularElSueldoDeUnCajeroSinAniosDeAntiguedad() throws EmpleadoNoEncontradoException {
 		Empleado cajero = new Cajero(76, "Juanito", LocalDate.of(2024,4,2));
 		restaurante.agregarEmpleado(cajero);
 		restaurante.cargarValorHoraDeUnEmpleado(76, 100.0);
@@ -302,9 +305,6 @@ public class TestBase {
 		assertEquals(sueldoDeseado, sueldoObtenido);
 
 	}
-//>>>>>>> e2b761878c31bf6f1521a3a617659efa0ea693e3
-	
-	//<<<<<<< HEAD
 	
 	// metodos obtener
 	@Test
@@ -635,7 +635,8 @@ public class TestBase {
 		Reserva reserva = new Reserva(1, LocalDate.of(2024, 5, 20), LocalTime.of(16, 0));
 		Cliente cliente = new Cliente(1, "Juan");
 
-		ReservaCliente reservaCliente = new ReservaCliente(reserva, cliente);
+		Mesa mesa = new Mesa(12);
+		ReservaCliente reservaCliente = new ReservaCliente(reserva, cliente, mesa);
 
 		assertNotNull(reservaCliente);
 	}
@@ -902,5 +903,12 @@ public class TestBase {
 		restaurante.asignarEmpleadoAEncargado(encargado, mesero);
 		restaurante.asignarEmpleadoAEncargado(encargado, mesero);
 	}
+
+
+	@Test (expected = EmpleadoNoEncontradoException.class)
+	public void queLanceUnaExcepcionSiQuieroObtenerElSueldoDeUnEmpleadoQueNoExiste() throws EmpleadoNoEncontradoException {
+		Double sueldoObtenido = restaurante.obtenerSueldoDeUnEmpleado(101);
+	}
+	
 
 }
