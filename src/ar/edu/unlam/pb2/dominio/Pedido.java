@@ -3,27 +3,17 @@ package ar.edu.unlam.pb2.dominio;
 import java.util.Objects;
 
 public class Pedido {
-	
-	private Reserva reserva;
-	private Cliente cliente;
+
+	private ReservaCliente reservaCliente;
 	private Empleado mesero;
-	//que una pedido tenga una COLECCION DE MESEROS
 
-	public Pedido(Reserva reserva, Cliente cliente) {
-		this.reserva = reserva;
-		this.cliente = cliente;
-	}
-
-	public Reserva getReserva() {
-		return reserva;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setMesero(Empleado mesero) {
+	public Pedido(ReservaCliente rcEncontrada, Empleado mesero) {
+		this.reservaCliente = rcEncontrada;
 		this.mesero = mesero;
+	}
+
+	public ReservaCliente getReservaCliente() {
+		return reservaCliente;
 	}
 
 	public Empleado getMesero() {
@@ -32,7 +22,7 @@ public class Pedido {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(cliente, mesero, reserva);
+		return Objects.hash(mesero, reservaCliente);
 	}
 
 	@Override
@@ -44,9 +34,7 @@ public class Pedido {
 		if (getClass() != obj.getClass())
 			return false;
 		Pedido other = (Pedido) obj;
-		return Objects.equals(cliente, other.cliente) && Objects.equals(mesero, other.mesero)
-				&& Objects.equals(reserva, other.reserva);
+		return Objects.equals(mesero, other.mesero) && Objects.equals(reservaCliente, other.reservaCliente);
 	}
 
-	
 }

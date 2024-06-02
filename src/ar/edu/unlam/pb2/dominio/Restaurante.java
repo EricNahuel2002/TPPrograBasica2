@@ -12,14 +12,18 @@ public class Restaurante implements IRestaurante {
 	private List<Empleado> empleados;
 	private List<Cliente> clientes;
 	private List<Reserva> reservas;
+	private List<ReservaCliente> reservasClientes;
 	private List<Pedido> pedidos;
+	private List<Mesa> mesas;
 
 	public Restaurante(String nombreRestaurante) {
 		this.nombre = nombreRestaurante;
 		this.empleados = new ArrayList<>();
 		this.clientes = new ArrayList<>();
 		this.reservas = new ArrayList<>();
+		this.reservasClientes = new ArrayList<>();
 		this.pedidos = new ArrayList<>();
+		this.mesas = new ArrayList<>();
 	}
 	// cantidad de veces que un cliente fue al restaurante
 	// coleccion de clientes
@@ -52,78 +56,6 @@ public class Restaurante implements IRestaurante {
 	}
 
 	@Override
-	public List<Empleado> obtenerListaDeEmpleadosOrdenadoDeMayorAMenorPorSueldo() {
-		Collections.sort(empleados, (o1, o2) -> o2.getSueldo().compareTo(o1.getSueldo()));
-		return this.empleados;
-	}
-
-	@Override
-	public List<Empleado> obtenerListaDeEncargadosOrdenadoDeMayorAMenorPorSueldo() {
-		List<Empleado> encargados = this.obtenerEncargados();
-		ordenarEmpleados(encargados);
-		return encargados;
-	}
-
-	private void ordenarEmpleados(List<Empleado> encargados) {
-		Collections.sort(encargados, (o1, o2) -> o2.getSueldo().compareTo(o1.getSueldo()));
-	}
-
-	@Override
-	public List<Empleado> obtenerListaDeMeserosOrdenadoDeMayorAMenorPorSueldo() {
-		List<Empleado> meseros = this.obtenerMeseros();
-		ordenarEmpleados(meseros);
-		return meseros;
-	}
-
-	private List<Empleado> obtenerMeseros() {
-		List<Empleado> meseros = new ArrayList<>();
-		for (Empleado empleado : this.empleados) {
-			if (empleado instanceof Mesero) {
-				meseros.add(empleado);
-			}
-		}
-		return meseros;
-	}
-
-	@Override
-	public List<Empleado> obtenerListaDeCajerosOrdenadoDeMayorAMenorPorSueldo() {
-		List<Empleado> cajeros = this.obtenerCajeros();
-		ordenarEmpleados(cajeros);
-		return cajeros;
-	}
-
-	private List<Empleado> obtenerCajeros() {
-		List<Empleado> cajeros = new ArrayList<>();
-		for (Empleado empleado : this.empleados) {
-			if (empleado instanceof Cajero) {
-				cajeros.add(empleado);
-			}
-		}
-		return cajeros;
-	}
-
-	@Override
-	public Empleado obtenerElMeseroDelMes() {
-		Empleado mesero = pedidos.get(0).getMesero();
-		for (Pedido rc : pedidos) {
-			if (((Mesero) rc.getMesero()).getCantidadDePedidosTomados() > ((Mesero) mesero)
-					.getCantidadDePedidosTomados()) {
-				mesero = rc.getMesero();
-			}
-		}
-		return mesero;
-	}
-
-	@Override
-	public HashSet<Cliente> obtenerLaCantidadDeClientesQueFueronAlRestaurante() {
-		HashSet<Cliente> clientes = new HashSet<>();
-		for (Pedido p : pedidos) {
-			clientes.add(p.getCliente());
-		}
-		return clientes;
-	}
-
-	@Override
 	public Boolean agregarCliente(Cliente cliente) {
 		return this.clientes.add(cliente);
 	}
@@ -139,33 +71,38 @@ public class Restaurante implements IRestaurante {
 	}
 
 	@Override
-	public Double calcularElSueldoEnBaseALaAntiguedadDeUnEmpleado(Empleado empleado) {
-		Empleado encontrado = buscarUnEmpleado(empleado.getCodigo());
-		return encontrado.calcularSueldoEnBaseALaAntiguedad(empleado.getSueldo());
-	}
-
-	@Override
 	public Boolean agregarReserva(Reserva reserva) {
 		return reservas.add(reserva);
 	}
 
-	public Boolean realizarPedido(Reserva reserva, Cliente cliente)
-			throws ClienteNoEncontradoException, ReservaNoEncontradaException, PedidoDuplicadoException {
+	public Boolean realizarReserva(Reserva reserva, Cliente cliente, Mesa mesa)
+			throws ClienteNoEncontradoException, ReservaNoEncontradaException, ReservaClienteDuplicadoException, MesaNoEncontrada, MesaYaAsignadaAReserva {
 		Cliente clienteEncontrado = validacionClienteNoEncontrado(cliente);
 		Reserva reservaEncontrada = validacionReservaNoEncontrada(reserva);
-		// buscar reservacliente
-		// if(reservaClienteEncontrada == null){
-		// return false
-		if (reservaEncontrada != null && clienteEncontrado != null) {
-			Pedido p = this.buscarPedido(reservaEncontrada, clienteEncontrado);
-			if (p == null) {
-				Pedido reservaCliente = new Pedido(reservaEncontrada, clienteEncontrado);
-				return pedidos.add(reservaCliente);
-			} else {
-				throw new PedidoDuplicadoException();
-			}
+		ReservaCliente rc = validacionReservaClienteDuplicado(clienteEncontrado, reservaEncontrada);
+		Mesa mesaEncontrada = validacionMesaNoEncontrada(mesa);
+		rc = new ReservaCliente(reservaEncontrada, clienteEncontrado,mesaEncontrada);
+		return reservasClientes.add(rc);
+	}
+
+	private Mesa validacionMesaNoEncontrada(Mesa mesa) throws MesaNoEncontrada {
+		Mesa mesaEncontrada = this.buscarMesa(mesa);
+		if(mesaEncontrada == null) {
+			throw new MesaNoEncontrada();
 		}
-		return false;
+		return mesaEncontrada;
+	}
+
+	private ReservaCliente validacionReservaClienteDuplicado(Cliente clienteEncontrado, Reserva reservaEncontrada)
+			throws ReservaClienteDuplicadoException, MesaYaAsignadaAReserva {
+		ReservaCliente rc = this.buscarReservaCliente(reservaEncontrada, clienteEncontrado);
+		if (rc != null) {
+			if(rc.getReserva().getMesa() != null) {
+				throw new MesaYaAsignadaAReserva();
+			}
+			throw new ReservaClienteDuplicadoException();
+		}
+		return rc;
 	}
 
 	private Reserva validacionReservaNoEncontrada(Reserva reserva) throws ReservaNoEncontradaException {
@@ -184,9 +121,18 @@ public class Restaurante implements IRestaurante {
 		return clienteEncontrado;
 	}
 
-	private Pedido buscarPedido(Reserva reservaEncontrada, Cliente clienteEncontrado) {
-		for (Pedido pd : pedidos) {
+	private ReservaCliente buscarReservaCliente(Reserva reservaEncontrada, Cliente clienteEncontrado) {
+		for (ReservaCliente pd : reservasClientes) {
 			if (pd.getReserva().equals(reservaEncontrada) && pd.getCliente().equals(clienteEncontrado)) {
+				return pd;
+			}
+		}
+		return null;
+	}
+
+	private Pedido buscarPedido(ReservaCliente reservaClienteEncontrada, Empleado empleadoEncontrado) {
+		for (Pedido pd : pedidos) {
+			if (pd.getReservaCliente().equals(reservaClienteEncontrada) && pd.getMesero().equals(empleadoEncontrado)) {
 				return pd;
 			}
 		}
@@ -202,8 +148,8 @@ public class Restaurante implements IRestaurante {
 		return null;
 	}
 
-	public Boolean agregarReservaCliente(Pedido rc) {
-		return pedidos.add(rc);
+	public Boolean agregarReservaCliente(ReservaCliente rc) {
+		return reservasClientes.add(rc);
 	}
 
 	public List<Empleado> obtenerEncargados() {
@@ -218,7 +164,7 @@ public class Restaurante implements IRestaurante {
 
 	public List<Reserva> obtenerHistorialDeReservasDeUnCliente(Cliente cliente) {
 		List<Reserva> reservasDeUnCliente = new ArrayList<>();
-		for (Pedido rc : pedidos) {
+		for (ReservaCliente rc : reservasClientes) {
 			if (rc.getCliente().equals(cliente)) {
 				reservasDeUnCliente.add(rc.getReserva());
 			}
@@ -229,25 +175,52 @@ public class Restaurante implements IRestaurante {
 	// reserva n----n clientes sale clase intermedia
 	// en
 
+//	public Boolean queUnMeseroTomeUnPedido(Reserva reserva, Cliente cliente, Empleado mesero)
+//			throws EmpleadoNoEncontradoException, PedidoDuplicadoException, ReservaNoEncontradaException,
+//			ClienteNoEncontradoException, PedidoYaTomado {
+//		validacionReservaNoEncontrada(reserva);
+//		validacionClienteNoEncontrado(cliente);
+//		validacionEmpleadoNoEncontrado(mesero);
+//		ReservaCliente pedido = this.buscarPedido(reserva, cliente);
+//		if (pedido.getMesero() == null) {
+//			pedido.setMesero(mesero);
+//			((Mesero) mesero).incrementarCantidadDePedidosTomados();
+//			return true;
+//		}
+//		if (pedido.getMesero() != null) {
+//			if (pedido.getMesero().equals(mesero)) {
+//				throw new PedidoDuplicadoException();
+//			}
+//			throw new PedidoYaTomado();
+//		}
+//		return false;
+//	}
+
 	public Boolean queUnMeseroTomeUnPedido(Reserva reserva, Cliente cliente, Empleado mesero)
 			throws EmpleadoNoEncontradoException, PedidoDuplicadoException, ReservaNoEncontradaException,
-			ClienteNoEncontradoException, PedidoYaTomado {
+			ClienteNoEncontradoException, ReservaClienteNoEncontrado {
 		validacionReservaNoEncontrada(reserva);
 		validacionClienteNoEncontrado(cliente);
 		validacionEmpleadoNoEncontrado(mesero);
-		Pedido pedido = this.buscarPedido(reserva, cliente);
-		if (pedido.getMesero() == null) {
-			pedido.setMesero(mesero);
+		ReservaCliente rcEncontrada = validacionReservaClienteNoEncontrado(reserva, cliente);
+		Pedido pedido = this.buscarPedido(rcEncontrada, mesero);
+		if (pedido == null) {
 			((Mesero) mesero).incrementarCantidadDePedidosTomados();
-			return true;
+			return pedidos.add(new Pedido(rcEncontrada, mesero));
 		}
-		if (pedido.getMesero() != null) {
-			if (pedido.getMesero().equals(mesero)) {
-				throw new PedidoDuplicadoException();
-			}
-			throw new PedidoYaTomado();
+		if (pedido.getMesero().equals(mesero)) {
+			throw new PedidoDuplicadoException();
 		}
 		return false;
+	}
+
+	private ReservaCliente validacionReservaClienteNoEncontrado(Reserva reserva, Cliente cliente)
+			throws ReservaClienteNoEncontrado {
+		ReservaCliente rcEncontrada = this.buscarUnaReservaCliente(cliente, reserva);
+		if (rcEncontrada == null) {
+			throw new ReservaClienteNoEncontrado();
+		}
+		return rcEncontrada;
 	}
 
 	private void validacionEmpleadoNoEncontrado(Empleado empleado) throws EmpleadoNoEncontradoException {
@@ -266,19 +239,96 @@ public class Restaurante implements IRestaurante {
 		return false;
 	}
 
-	public Boolean asignarEmpleadoAEncargado(Empleado encargado, Empleado mesero) throws EmpleadoNoEncontradoException, EmpleadoYaAsignadoAEncargado {
+	public Boolean asignarEmpleadoAEncargado(Empleado encargado, Empleado mesero)
+			throws EmpleadoNoEncontradoException, EmpleadoYaAsignadoAEncargado {
 		validacionEmpleadoNoEncontrado(encargado);
 		validacionEmpleadoNoEncontrado(mesero);
 		validacionEmpleadoYaAsignadoAEncargado(encargado, mesero);
-			return ((Encargado) encargado).asignarEmpleado(mesero);
+		return ((Encargado) encargado).asignarEmpleado(mesero);
 	}
 
 	private void validacionEmpleadoYaAsignadoAEncargado(Empleado encargado, Empleado mesero)
 			throws EmpleadoYaAsignadoAEncargado {
-		for(Empleado empleado: ((Encargado) encargado).getEmpleadosACargo()) {
-			if(empleado.equals(mesero)) {
+		for (Empleado empleado : ((Encargado) encargado).getEmpleadosACargo()) {
+			if (empleado.equals(mesero)) {
 				throw new EmpleadoYaAsignadoAEncargado();
 			}
 		}
 	}
+
+	public ReservaCliente buscarUnaReservaCliente(Cliente cliente, Reserva reserva) {
+		for (ReservaCliente rc : reservasClientes) {
+			if (rc.getCliente().equals(cliente) && rc.getReserva().equals(reserva)) {
+				return rc;
+			}
+		}
+		return null;
+	}
+	
+	public Mesa buscarMesa(Mesa mesa) {
+		for(Mesa m: mesas) {
+			if(m.equals(mesa)) {
+				return m;
+			}
+		}
+		return null;
+	}
+
+	public Boolean agregarMesa(Mesa mesa) {
+		return mesas.add(mesa);
+	}
+
+	@Override
+	public List<Empleado> obtenerListaDeEmpleadosOrdenadoDeMayorAMenorPorSueldo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Empleado> obtenerListaDeEncargadosOrdenadoDeMayorAMenorPorSueldo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Empleado> obtenerListaDeMeserosOrdenadoDeMayorAMenorPorSueldo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Empleado> obtenerListaDeCajerosOrdenadoDeMayorAMenorPorSueldo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Empleado obtenerElMeseroDelMes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HashSet<Cliente> obtenerLaCantidadDeClientesQueFueronAlRestaurante() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Double calcularElSueldoEnBaseALaAntiguedadDeUnEmpleado(Empleado empleado) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Reserva obtenerReservaDeReservasClientes(Reserva reserva) {
+		for (ReservaCliente rc : reservasClientes) {
+			if (rc.getReserva().equals(reserva)) {
+				return rc.getReserva();
+			}
+		}
+		return null;
+	}
+
+
+
 }
