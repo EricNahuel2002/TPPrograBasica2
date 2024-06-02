@@ -294,4 +294,9 @@ public class TestBase {
 
 	}
 	
+	@Test (expected = EmpleadoNoEncontradoException.class)
+	public void queLanceUnaExcepcionSiQuieroObtenerElSueldoDeUnEmpleadoQueNoExiste() throws EmpleadoNoEncontradoException {
+		Double sueldoObtenido = restaurante.obtenerSueldoDeUnEmpleado(101);
+	}
+	
 }
