@@ -780,7 +780,7 @@ public class TestBase {
 		assertNotNull(reservaCliente);
 	}
 
-/*	@Test
+	@Test
 	public void queUnClientePuedaHacerUnaReserva()
 			throws ClienteNoEncontradoException, ReservaNoEncontradaException, ReservaClienteDuplicadoException, MesaNoEncontrada, MesaYaAsignadaAReserva {
 		Reserva reserva = new Reserva(1, LocalDate.of(2024, 5, 20), LocalTime.of(16, 0));
@@ -791,7 +791,7 @@ public class TestBase {
 		Boolean reservaRealizada = restaurante.realizarReserva(reserva, cliente,null);
 
 		assertTrue(reservaRealizada);
-	}*/
+	}
 
 	@Test(expected = ClienteNoEncontradoException.class)
 	public void dadoQueUnClientePuedeHacerUnaReservaSiNoSeLoEncuentraQueSeLanceLaExceptionAdecuada()
@@ -813,7 +813,7 @@ public class TestBase {
 		restaurante.realizarReserva(reserva, cliente,null);
 	}
 
-/*	@Test(expected = ReservaClienteDuplicadoException.class)
+	@Test(expected = ReservaClienteDuplicadoException.class)
 	public void dadoQueUnClientePuedeHacerUnaReservaQueNoPuedaHaberLaMismaReservaClienteDosVeces()
 			throws ClienteNoEncontradoException, ReservaNoEncontradaException, ReservaClienteDuplicadoException, MesaNoEncontrada, MesaYaAsignadaAReserva {
 		Reserva reserva = new Reserva(1, LocalDate.of(2024, 5, 20), LocalTime.of(16, 0));
@@ -823,7 +823,7 @@ public class TestBase {
 
 		restaurante.realizarReserva(reserva, cliente,null);
 		restaurante.realizarReserva(reserva, cliente,null);
-	}*/
+	}
 	
 	//-----------------------PARTE MESA -------------------------------
 
@@ -854,7 +854,7 @@ public class TestBase {
 		assertEquals(mesa,mesaObtenida);
 	}
 	
-/*	@Test
+	@Test
 	public void queSePuedaObtenerUnaReservaEntreLasReservasClientesDelRestaurante() throws ClienteNoEncontradoException, ReservaNoEncontradaException, ReservaClienteDuplicadoException, MesaNoEncontrada, MesaYaAsignadaAReserva {
 		Cliente cliente = new Cliente(1,"Juan");
 		restaurante.agregarCliente(cliente);
@@ -865,7 +865,7 @@ public class TestBase {
 		Reserva reservaObtenida = restaurante.obtenerReservaDeReservasClientes(reserva);
 		
 		assertEquals(reserva,reservaObtenida);
-	}*/
+	}
 	
 	@Test
 	public void queSePuedaAsignarUnaMesaAUnaReserva() throws ClienteNoEncontradoException, ReservaNoEncontradaException, ReservaClienteDuplicadoException, MesaNoEncontrada, MesaYaAsignadaAReserva {
@@ -907,7 +907,7 @@ public class TestBase {
 	
 	//----------------------------------- PARTE MESA FIN --------------------
 
-	/*@Test
+	@Test
 	public void queSePuedaBuscarUnaReservaCliente()
 			throws ClienteNoEncontradoException, ReservaNoEncontradaException, ReservaClienteDuplicadoException, MesaNoEncontrada, MesaYaAsignadaAReserva {
 		Cliente cliente = new Cliente(1, "Juan");
@@ -920,9 +920,9 @@ public class TestBase {
 
 		assertEquals(cliente, rcEncontrada.getCliente());
 		assertEquals(reserva, rcEncontrada.getReserva());
-	}*/
+	}
 
-/*	@Test
+	@Test
 	public void queSePuedaCrearUnPedido()
 			throws ClienteNoEncontradoException, ReservaNoEncontradaException, ReservaClienteDuplicadoException, MesaNoEncontrada, MesaYaAsignadaAReserva {
 		Cliente cliente = new Cliente(1, "Juan");
@@ -936,9 +936,9 @@ public class TestBase {
 		Pedido pedido = new Pedido(rcEncontrada, mesero);
 
 		assertNotNull(pedido);
-	}*/
+	}
 
-/*	@Test
+	@Test
 	public void queUnMeseroTomeUnPedido() throws ClienteNoEncontradoException, ReservaNoEncontradaException,
 			PedidoDuplicadoException, EmpleadoNoEncontradoException, PedidoYaTomado, ReservaClienteDuplicadoException,
 			ReservaClienteNoEncontrado, MesaNoEncontrada, MesaYaAsignadaAReserva {
@@ -953,9 +953,9 @@ public class TestBase {
 		Boolean pedidoTomadoPorMesero = restaurante.queUnMeseroTomeUnPedido(reserva, cliente, mesero);
 
 		assertTrue(pedidoTomadoPorMesero);
-	}*/
+	}
 
-	/*@Test(expected = EmpleadoNoEncontradoException.class)
+	@Test(expected = EmpleadoNoEncontradoException.class)
 	public void dadoQueUnMeseroTomaUnPedidoSiNoSeLoEncuentraQueSeLanceUnaExceptionAdecuada()
 			throws ClienteNoEncontradoException, ReservaNoEncontradaException, EmpleadoNoEncontradoException,
 			ReservaClienteDuplicadoException, PedidoDuplicadoException, PedidoYaTomado, ReservaClienteNoEncontrado, MesaNoEncontrada, MesaYaAsignadaAReserva {
@@ -967,9 +967,9 @@ public class TestBase {
 		restaurante.realizarReserva(reserva, cliente,null);
 
 		restaurante.queUnMeseroTomeUnPedido(reserva, cliente, mesero);
-	}*/
+	}
 
-	/*@Test(expected = ReservaClienteNoEncontrado.class)
+	@Test(expected = ReservaClienteNoEncontrado.class)
 	public void dadoQueUnMeseroTomaUnPedidoSiNoSeEncuentraElPedidoQueLanceException()
 			throws ClienteNoEncontradoException, ReservaNoEncontradaException, ReservaClienteDuplicadoException,
 			EmpleadoNoEncontradoException, PedidoDuplicadoException, PedidoYaTomado, ReservaClienteNoEncontrado, MesaNoEncontrada, MesaYaAsignadaAReserva {
@@ -984,9 +984,9 @@ public class TestBase {
 		restaurante.realizarReserva(reserva, cliente,null);
 
 		restaurante.queUnMeseroTomeUnPedido(reserva, cliente2, mesero);
-	}*/
+	}
 
-/*	@Test(expected = PedidoDuplicadoException.class)
+	@Test(expected = PedidoDuplicadoException.class)
 	public void dadoQueUnMeseroTomaLaReservaDeUnClienteQueNoSeDeLaMismaCombinacionDeReservaClienteMeseroDosVeces()
 			throws ClienteNoEncontradoException, ReservaNoEncontradaException, PedidoYaTomado,
 			EmpleadoNoEncontradoException, PedidoDuplicadoException, ReservaClienteDuplicadoException,
@@ -1001,7 +1001,7 @@ public class TestBase {
 
 		restaurante.queUnMeseroTomeUnPedido(reserva, cliente, mesero);
 		restaurante.queUnMeseroTomeUnPedido(reserva, cliente, mesero);
-	}*/
+	}
 
 	@Test
 	public void queSePuedaAsignarEmpleadosAUnEncargado()
