@@ -2,6 +2,7 @@ package ar.edu.unlam.pb2.paquetetest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
@@ -12,7 +13,10 @@ import org.junit.Test;
 
 import ar.edu.unlam.pb2.dominio.Cajero;
 import ar.edu.unlam.pb2.dominio.Cliente;
+import ar.edu.unlam.pb2.dominio.ClienteNoEncontradoException;
 import ar.edu.unlam.pb2.dominio.Empleado;
+import ar.edu.unlam.pb2.dominio.EmpleadoDuplicadoException;
+import ar.edu.unlam.pb2.dominio.EmpleadoNoEncontradoException;
 import ar.edu.unlam.pb2.dominio.Encargado;
 import ar.edu.unlam.pb2.dominio.Mesero;
 import ar.edu.unlam.pb2.dominio.Reserva;
@@ -84,30 +88,38 @@ public class TestBase {
 	}
 	
 	
-	
 	@Test
-	public void queSePuedaAgregarUnEmpleadoAlRestaurante() {
-		
-		Empleado mesero = new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12));
-		
-		Boolean empleadoAgregado = restaurante.agregarEmpleado(mesero);
-		
-		assertTrue(empleadoAgregado);
-	
-	}
-	
-	@Test
-	public void queNoSePuedaAgregarUnEmpleadoConElMismoCodigo() {
+	public void queSePuedaAgregarUnEmpleadoAlRestaurante() throws EmpleadoDuplicadoException, EmpleadoNoEncontradoException {
 
-		Boolean seAgregoEmpleado = restaurante.agregarEmpleado(new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12)));
-		Boolean seAgregoEmpleado2 = restaurante.agregarEmpleado(new Mesero(003, "Ana", LocalDate.of(1998, 12, 19)));
-		
-		assertTrue(seAgregoEmpleado);
-		assertFalse(seAgregoEmpleado2);
+	    Empleado mesero = new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12));
+
+
+	    Boolean empleadoAgregado = restaurante.agregarEmpleado(mesero);
+
+
+	    assertTrue(empleadoAgregado);
 	}
+
+
+	
+
+	@Test
+	public void queAlAgregarUnEmpleadoQueYaEstaAgregadoLanceUnaException() throws EmpleadoDuplicadoException, EmpleadoNoEncontradoException {
+	    
+	    restaurante.agregarEmpleado(new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12)));
+	   
+	    try {
+	        restaurante.agregarEmpleado(new Mesero(003, "Ana", LocalDate.of(1998, 12, 19)));
+	      
+	    } catch (EmpleadoDuplicadoException e) {
+	        
+	    }
+	}
+
+	
 	
 	@Test
-	public void queSePuedaDespedirAUnEmpleado() {
+	public void queSePuedaDespedirAUnEmpleado() throws EmpleadoDuplicadoException, EmpleadoNoEncontradoException {
 		
 		Empleado mesero = new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12));
 		
@@ -116,6 +128,16 @@ public class TestBase {
 		Boolean empleadoDespedido = restaurante.despedirUnEmpleado(mesero.getCodigo());
 		
 		assertTrue(empleadoDespedido);
+	}
+	
+	@Test(expected = EmpleadoNoEncontradoException.class)
+	public void queAlDespedirUnEmpleadoNoExistenteLanceUnaException() throws EmpleadoNoEncontradoException {
+
+	    Integer numeroEmpleadoNoExistente = 999; 
+	    
+	    restaurante.despedirUnEmpleado(numeroEmpleadoNoExistente);
+	    
+
 	}
 	
 	@Test
@@ -154,20 +176,33 @@ public class TestBase {
 	
 	
 	@Test
-	public void queSePuedaBuscarUnEmpleadoPorSuId() {
-		
-		Empleado empleadoABuscar = new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12));
-		
-		restaurante.agregarEmpleado(empleadoABuscar);
-		
-		Empleado empleadoObtenido = restaurante.buscarUnEmpleado(empleadoABuscar.getCodigo());
-		
-		assertEquals(empleadoABuscar, empleadoObtenido);
-		
+	public void queSePuedaBuscarUnEmpleadoPorSuId() throws EmpleadoDuplicadoException, EmpleadoNoEncontradoException {
+
+	    Empleado empleadoABuscar = new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12));
+	    restaurante.agregarEmpleado(empleadoABuscar);
+
+
+	    Empleado empleadoObtenido = restaurante.buscarUnEmpleado(empleadoABuscar.getCodigo());
+
+
+
+	    assertEquals(empleadoABuscar, empleadoObtenido); 
 	}
 	
+	@Test(expected = EmpleadoNoEncontradoException.class)
+	public void queAlBuscarUnEmpleadoQueNoExistenteLanceUnaException() throws EmpleadoNoEncontradoException {
+
+	    Integer numeroEmpleadoNoExistente = 999; 
+	    
+	    restaurante.buscarUnEmpleado(numeroEmpleadoNoExistente);
+	    
+
+	}
+	
+
+	
 	@Test
-	public void queSePuedaBuscarUnClientePorSuNumero() {
+	public void queSePuedaBuscarUnClientePorSuNumero() throws ClienteNoEncontradoException {
 		
 		Cliente clienteABuscar = new Cliente(001, "Bautista");
 		
@@ -177,5 +212,17 @@ public class TestBase {
 		
 		assertEquals(clienteABuscar, clienteObtenido);
 	}
+	
+	@Test(expected = ClienteNoEncontradoException.class)
+	public void queAlBuscarUnClienteNoExistenteLanceUnaException() throws ClienteNoEncontradoException {
+
+	    Integer numeroClienteNoExistente = 999; 
+	    
+	    restaurante.buscarUnCliente(numeroClienteNoExistente);
+	    
+
+	}
+
+	
 	
 }

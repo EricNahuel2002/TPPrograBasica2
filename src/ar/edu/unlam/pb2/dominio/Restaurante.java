@@ -19,25 +19,26 @@ public class Restaurante {
 	}
 	
 
-	public Empleado buscarUnEmpleado(Integer codigo) {
+	public Empleado buscarUnEmpleado(Integer codigo) throws EmpleadoNoEncontradoException {
 		for(Empleado empleado: empleados) {
 			if(empleado.getCodigo().equals(codigo)) {
 				return empleado;
 			}
 		}
-		return null;
+		throw new EmpleadoNoEncontradoException();
 	}
 
-	public Boolean agregarEmpleado(Empleado empleado) {
-	    Empleado empleadoEncontrado = this.buscarUnEmpleado(empleado.getCodigo());
-	    if (empleadoEncontrado == null) {
-	        return empleados.add(empleado);
+	public Boolean agregarEmpleado(Empleado empleado) throws EmpleadoDuplicadoException {
+	    if (empleados.contains(empleado)) {
+	        throw new EmpleadoDuplicadoException();
 	    }
-	    return false;
+	    return empleados.add(empleado);
 	}
 
 
-	public Boolean despedirUnEmpleado(Integer codigo) {
+
+
+	public Boolean despedirUnEmpleado(Integer codigo) throws EmpleadoNoEncontradoException {
 		Empleado empleado = this.buscarUnEmpleado(codigo);
 		if(empleado != null) {
 			return empleados.remove(empleado);
@@ -61,13 +62,13 @@ public class Restaurante {
 	}
 
 
-	public Cliente buscarUnCliente(Integer numero) {
+	public Cliente buscarUnCliente(Integer numero) throws ClienteNoEncontradoException {
 		for(Cliente cliente: clientes) {
 			if(cliente.getNumero().equals(numero)) {
 				return cliente;
 			}
 		}
-		return null;
+		throw new ClienteNoEncontradoException();
 	}
 
 
