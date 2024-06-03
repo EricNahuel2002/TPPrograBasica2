@@ -7,11 +7,11 @@ public interface IRestaurante {
 	Boolean agregarEmpleado(Empleado empleado);
 	Boolean despedirUnEmpleado(Integer codigo);
 	Empleado buscarUnEmpleado(Integer codigo);
-	List<Empleado> obtenerListaDeEmpleadosOrdenadoDeMayorAMenorPorSueldo();
+	List<Empleado> obtenerListaDeEmpleadosOrdenadosDescendentePorSueldo();
 	List<Empleado> obtenerListaDeEncargadosOrdenadoDeMayorAMenorPorSueldo();
 	List<Empleado> obtenerListaDeMeserosOrdenadoDeMayorAMenorPorSueldo();
 	List<Empleado> obtenerListaDeCajerosOrdenadoDeMayorAMenorPorSueldo();
-	Empleado obtenerElMeseroDelMes();
+	Empleado obtenerElMeseroDelMes() throws NoHayEmpleadoDelMesException;
 	HashSet<Cliente> obtenerLaCantidadDeClientesQueFueronAlRestaurante();
 	Boolean agregarCliente(Cliente cliente);
 	Cliente buscarUnCliente(Integer id);

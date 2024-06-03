@@ -11,6 +11,8 @@ import java.util.TreeSet;
 
 
 public class Restaurante implements IRestaurante {
+	private static Integer CANTIDAD_MAXIMA_EMPLEADOS = 2;
+	
 	private String nombre;
 	private List<Empleado> empleados;
 	private List<Cliente> clientes;
@@ -145,8 +147,15 @@ public class Restaurante implements IRestaurante {
 
         throw new EmpleadoNoEncontradoException("Empleado con ID " + idEmpleado + " no existe.");
     }
+	
+	@Override
+	public Double calcularElSueldoEnBaseALaAntiguedadDeUnEmpleado(Empleado empleado) {
+		// falta empezar
+		return null;
+	}
 
 	// metodos obtener 
+	
 	public TreeSet<Empleado> obtenerListaDeEmpleadosOrdenadosAscendenteSinQueSeRepitaElCodigo() {
 		TreeSet <Empleado> listaEmpleadosOrdenado = new TreeSet<>();
 		
@@ -162,7 +171,8 @@ public class Restaurante implements IRestaurante {
 		return listaNoRepetida;
 	}
 
-	
+
+	@Override
 	public List<Empleado> obtenerListaDeEmpleadosOrdenadosDescendentePorSueldo() {
 		Collections.sort(empleados,(o1,o2) -> o2.getSueldo().compareTo(o1.getSueldo()));
 		return this.empleados;
@@ -185,23 +195,112 @@ public class Restaurante implements IRestaurante {
 		return listaMeseros;
 	}
 
-
-	public HashSet<Cliente> obtenerCantidadDeClientes(){
+	@Override
+	public HashSet<Cliente> obtenerLaCantidadDeClientesQueFueronAlRestaurante(){
 		HashSet<Cliente> clientesNoRepetidos = new HashSet<Cliente>();
 		clientesNoRepetidos.addAll(this.clientes);
 		return clientesNoRepetidos;
 		
-		
-		
 	}
 
 
+	@Override
+	public List<Empleado> obtenerListaDeEncargadosOrdenadoDeMayorAMenorPorSueldo() {
+		List<Empleado> listaEncargados = new ArrayList<>();
+		for (Empleado empleado : empleados) {
+			if (empleado instanceof Encargado) {
+				listaEncargados.add(empleado);
+				}
+		}
+		obtenerListaOrdenaDeEmpleadosSueldoDescendente(listaEncargados);
+		return listaEncargados;
+	}
+
+	private void obtenerListaOrdenaDeEmpleadosSueldoDescendente(List<Empleado> lista) {
+		Collections.sort(lista,(o1,o2) -> o2.getSueldo().compareTo(o1.getSueldo()));	
+	}
+
+
+	@Override
+	public List<Empleado> obtenerListaDeMeserosOrdenadoDeMayorAMenorPorSueldo() {
+		List<Empleado> listaDeMeseros = new ArrayList<>();
+		for (Empleado empleado : empleados) {
+			if (empleado instanceof Mesero) {
+				listaDeMeseros.add(empleado);
+			}
+		}
+		obtenerListaOrdenaDeEmpleadosSueldoDescendente(listaDeMeseros);
+		return listaDeMeseros;
+	}
+
+	@Override
+	public List<Empleado> obtenerListaDeCajerosOrdenadoDeMayorAMenorPorSueldo() {
+		List<Empleado> listaDeCajeros = new ArrayList<>();
+		for (Empleado empleado : empleados) {
+			if (empleado instanceof Cajero) {
+				listaDeCajeros.add(empleado);
+			}
+		}
+		obtenerListaOrdenaDeEmpleadosSueldoDescendente(listaDeCajeros);
+		return listaDeCajeros;
+	}
+
+	@Override
+	public Empleado obtenerElMeseroDelMes() throws NoHayEmpleadoDelMesException {
+		Empleado meseroMes = null;
+		int cp = -1;
+		for (Empleado e : empleados) {
+			if (e instanceof Mesero) {
+				Mesero m = (Mesero)e;
+				
+				if ( m.getCantidadPedidos() > cp  ) {
+					cp = m.getCantidadPedidos();
+					meseroMes = m;
+					return meseroMes;
+					
+				} 
+			}
+			 
+		}
+		throw new NoHayEmpleadoDelMesException();
+		
+	}
+	
+	public Boolean queUnMeseroPuedaTomarMasDeUnPedido(Reserva reserva, Cliente cliente, Empleado mesero)
+			throws EmpleadoNoEncontradoException, PedidoDuplicadoException, ReservaNoEncontradaException,
+			ClienteNoEncontradoException, ReservaClienteNoEncontrado {
+		
+		validacionReservaNoEncontrada(reserva);
+		validacionClienteNoEncontrado(cliente);
+		validacionEmpleadoNoEncontrado(mesero);
+		
+		ReservaCliente rcEncontrada = validacionReservaClienteNoEncontrado(reserva, cliente);
+		
+		Pedido pedido = this.buscarPedido(rcEncontrada, mesero);
+		if (pedido == null) {
+			for (Empleado e : empleados) {
+				if (e instanceof Mesero) {
+					Mesero m = (Mesero)e;
+		        m.incrementarCantidadPedidos();
+				}
+			return pedidos.add(new Pedido(rcEncontrada, mesero));
+		}
+		
+		}
+		return false;
+	}
+
+
+// metodos reservas
+	
 	public Boolean realizarReserva(Reserva reserva, Cliente cliente, Mesa mesa)
 			throws ClienteNoEncontradoException, ReservaNoEncontradaException, ReservaClienteDuplicadoException, MesaNoEncontrada, MesaYaAsignadaAReserva {
+		
 		Cliente clienteEncontrado = validacionClienteNoEncontrado(cliente);
 		Reserva reservaEncontrada = validacionReservaNoEncontrada(reserva);
 		ReservaCliente rc = validacionReservaClienteDuplicado(clienteEncontrado, reservaEncontrada);
 		Mesa mesaEncontrada = validacionMesaNoEncontrada(mesa);
+		
 		rc = new ReservaCliente(reservaEncontrada, clienteEncontrado,mesaEncontrada);
 		return reservasClientes.add(rc);
 	}
@@ -297,10 +396,12 @@ public class Restaurante implements IRestaurante {
 	public Boolean queUnMeseroTomeUnPedido(Reserva reserva, Cliente cliente, Empleado mesero)
 			throws EmpleadoNoEncontradoException, PedidoDuplicadoException, ReservaNoEncontradaException,
 			ClienteNoEncontradoException, ReservaClienteNoEncontrado {
+		
 		validacionReservaNoEncontrada(reserva);
 		validacionClienteNoEncontrado(cliente);
 		validacionEmpleadoNoEncontrado(mesero);
 		ReservaCliente rcEncontrada = validacionReservaClienteNoEncontrado(reserva, cliente);
+		
 		Pedido pedido = this.buscarPedido(rcEncontrada, mesero);
 		if (pedido == null) {
 			((Mesero) mesero).incrementarCantidadPedidos();
@@ -368,47 +469,6 @@ public class Restaurante implements IRestaurante {
 		return mesas.add(mesa);
 	}
 
-	@Override
-	public List<Empleado> obtenerListaDeEmpleadosOrdenadoDeMayorAMenorPorSueldo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Empleado> obtenerListaDeEncargadosOrdenadoDeMayorAMenorPorSueldo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Empleado> obtenerListaDeMeserosOrdenadoDeMayorAMenorPorSueldo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Empleado> obtenerListaDeCajerosOrdenadoDeMayorAMenorPorSueldo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Empleado obtenerElMeseroDelMes() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public HashSet<Cliente> obtenerLaCantidadDeClientesQueFueronAlRestaurante() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Double calcularElSueldoEnBaseALaAntiguedadDeUnEmpleado(Empleado empleado) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	public Reserva obtenerReservaDeReservasClientes(Reserva reserva) {
 		for (ReservaCliente rc : reservasClientes) {
@@ -418,6 +478,7 @@ public class Restaurante implements IRestaurante {
 		}
 		return null;
 	}
+
 
 
 }
