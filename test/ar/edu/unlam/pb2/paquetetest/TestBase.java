@@ -14,8 +14,25 @@ import java.util.TreeSet;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import ar.edu.unlam.pb2.dominio.*;
 import ar.edu.unlam.pb2.paquetetest.*;
+
+
+import ar.edu.unlam.pb2.dominio.Cajero;
+import ar.edu.unlam.pb2.dominio.Cliente;
+import ar.edu.unlam.pb2.dominio.ClienteNoEncontradoException;
+import ar.edu.unlam.pb2.dominio.Empleado;
+import ar.edu.unlam.pb2.dominio.EmpleadoDuplicadoException;
+import ar.edu.unlam.pb2.dominio.EmpleadoNoEncontradoException;
+import ar.edu.unlam.pb2.dominio.Encargado;
+import ar.edu.unlam.pb2.dominio.Mesero;
+import ar.edu.unlam.pb2.dominio.Reserva;
+import ar.edu.unlam.pb2.dominio.ReservaCliente;
+import ar.edu.unlam.pb2.dominio.Restaurante;
+
+
+
 
 public class TestBase {
 	
@@ -80,30 +97,38 @@ public class TestBase {
 	}
 	
 	
-	
 	@Test
-	public void queSePuedaAgregarUnEmpleadoAlRestaurante() {
-		
-		Empleado mesero = new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12));
-		
-		Boolean empleadoAgregado = restaurante.agregarEmpleado(mesero);
-		
-		assertTrue(empleadoAgregado);
-	
-	}
-	
-	@Test
-	public void queNoSePuedaAgregarUnEmpleadoConElMismoCodigo() {
+	public void queSePuedaAgregarUnEmpleadoAlRestaurante() throws EmpleadoDuplicadoException, EmpleadoNoEncontradoException {
 
-		Boolean seAgregoEmpleado = restaurante.agregarEmpleado(new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12)));
-		Boolean seAgregoEmpleado2 = restaurante.agregarEmpleado(new Mesero(003, "Ana", LocalDate.of(1998, 12, 19)));
-		
-		assertTrue(seAgregoEmpleado);
-		assertFalse(seAgregoEmpleado2);
+	    Empleado mesero = new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12));
+
+
+	    Boolean empleadoAgregado = restaurante.agregarEmpleado(mesero);
+
+
+	    assertTrue(empleadoAgregado);
 	}
+
+
+	
+
+	@Test
+	public void queAlAgregarUnEmpleadoQueYaEstaAgregadoLanceUnaException() throws EmpleadoDuplicadoException, EmpleadoNoEncontradoException {
+	    
+	    restaurante.agregarEmpleado(new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12)));
+	   
+	    try {
+	        restaurante.agregarEmpleado(new Mesero(003, "Ana", LocalDate.of(1998, 12, 19)));
+	      
+	    } catch (EmpleadoDuplicadoException e) {
+	        
+	    }
+	}
+
+	
 	
 	@Test
-	public void queSePuedaDespedirAUnEmpleado() {
+	public void queSePuedaDespedirAUnEmpleado() throws EmpleadoDuplicadoException, EmpleadoNoEncontradoException {
 		
 		Empleado mesero = new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12));
 		
@@ -112,6 +137,16 @@ public class TestBase {
 		Boolean empleadoDespedido = restaurante.despedirUnEmpleado(mesero.getCodigo());
 		
 		assertTrue(empleadoDespedido);
+	}
+	
+	@Test(expected = EmpleadoNoEncontradoException.class)
+	public void queAlDespedirUnEmpleadoNoExistenteLanceUnaException() throws EmpleadoNoEncontradoException {
+
+	    Integer numeroEmpleadoNoExistente = 999; 
+	    
+	    restaurante.despedirUnEmpleado(numeroEmpleadoNoExistente);
+	    
+
 	}
 	
 	@Test
@@ -153,20 +188,33 @@ public class TestBase {
 	
 	
 	@Test
-	public void queSePuedaBuscarUnEmpleadoPorSuId() {
-		
-		Empleado empleadoABuscar = new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12));
-		
-		restaurante.agregarEmpleado(empleadoABuscar);
-		
-		Empleado empleadoObtenido = restaurante.buscarUnEmpleado(empleadoABuscar.getCodigo());
-		
-		assertEquals(empleadoABuscar, empleadoObtenido);
-		
+	public void queSePuedaBuscarUnEmpleadoPorSuId() throws EmpleadoDuplicadoException, EmpleadoNoEncontradoException {
+
+	    Empleado empleadoABuscar = new Mesero(003, "Pedro", LocalDate.of(2005, 05, 12));
+	    restaurante.agregarEmpleado(empleadoABuscar);
+
+
+	    Empleado empleadoObtenido = restaurante.buscarUnEmpleado(empleadoABuscar.getCodigo());
+
+
+
+	    assertEquals(empleadoABuscar, empleadoObtenido); 
 	}
 	
+	@Test(expected = EmpleadoNoEncontradoException.class)
+	public void queAlBuscarUnEmpleadoQueNoExistenteLanceUnaException() throws EmpleadoNoEncontradoException {
+
+	    Integer numeroEmpleadoNoExistente = 999; 
+	    
+	    restaurante.buscarUnEmpleado(numeroEmpleadoNoExistente);
+	    
+
+	}
+	
+
+	
 	@Test
-	public void queSePuedaBuscarUnClientePorSuNumero() {
+	public void queSePuedaBuscarUnClientePorSuNumero() throws ClienteNoEncontradoException {
 		
 		Cliente clienteABuscar = new Cliente(001, "Bautista");
 		
@@ -178,9 +226,10 @@ public class TestBase {
 	}
 	
 
+
 	// metodos calcular sueldo
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnEncargado() throws EmpleadoNoEncontradoException {
+	public void queSePuedaCalcularElSueldoDeUnEncargado() throws EmpleadoNoEncontradoException, EmpleadoDuplicadoException {
 
 		Empleado encargado = new Encargado(123, "Julieta", LocalDate.of(2000,5,19));
 		restaurante.agregarEmpleado(encargado);
@@ -207,7 +256,7 @@ public class TestBase {
 	}
 
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnMesero() throws EmpleadoNoEncontradoException {
+	public void queSePuedaCalcularElSueldoDeUnMesero() throws EmpleadoNoEncontradoException, EmpleadoDuplicadoException {
 		Empleado mesero = new Mesero(112, "Juanito", LocalDate.of(2020,6,2));
 		restaurante.agregarEmpleado(mesero);
 		restaurante.cargarValorHoraDeUnEmpleado(112, 100.0);
@@ -245,7 +294,7 @@ public class TestBase {
 	}
 	
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnCajero() throws EmpleadoNoEncontradoException {
+	public void queSePuedaCalcularElSueldoDeUnCajero() throws EmpleadoNoEncontradoException, EmpleadoDuplicadoException {
 		Empleado cajero = new Cajero(76, "Juanito", LocalDate.of(2020,6,2));
 		restaurante.agregarEmpleado(cajero);
 		restaurante.cargarValorHoraDeUnEmpleado(76, 100.0);
@@ -260,7 +309,7 @@ public class TestBase {
 	}
 	
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnEncargadoSinEmpleadosACargo() throws EmpleadoNoEncontradoException {
+	public void queSePuedaCalcularElSueldoDeUnEncargadoSinEmpleadosACargo() throws EmpleadoNoEncontradoException, EmpleadoDuplicadoException {
 
 		Empleado encargado = new Encargado(123, "Julieta", LocalDate.of(2000,5,19));
 		restaurante.agregarEmpleado(encargado);
@@ -277,7 +326,7 @@ public class TestBase {
 	}
 
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnMeseroSinPedidosRealizados() throws EmpleadoNoEncontradoException {
+	public void queSePuedaCalcularElSueldoDeUnMeseroSinPedidosRealizados() throws EmpleadoNoEncontradoException, EmpleadoDuplicadoException {
 		Empleado mesero = new Mesero(112, "Juanito", LocalDate.of(2020,6,2));
 		restaurante.agregarEmpleado(mesero);
 		restaurante.cargarValorHoraDeUnEmpleado(112, 100.0);
@@ -292,7 +341,7 @@ public class TestBase {
 	}
 
 	@Test
-	public void queSePuedaCalcularElSueldoDeUnCajeroSinAniosDeAntiguedad() throws EmpleadoNoEncontradoException {
+	public void queSePuedaCalcularElSueldoDeUnCajeroSinAniosDeAntiguedad() throws EmpleadoNoEncontradoException, EmpleadoDuplicadoException {
 		Empleado cajero = new Cajero(76, "Juanito", LocalDate.of(2024,4,2));
 		restaurante.agregarEmpleado(cajero);
 		restaurante.cargarValorHoraDeUnEmpleado(76, 100.0);
@@ -310,7 +359,7 @@ public class TestBase {
 	
 
 	@ Test
-	public void queSePuedaOrdenarPorCodigoATodosLosEmpleadosQueTrabajanEnElrestauranteSinQueSeRepitan() {
+	public void queSePuedaOrdenarPorCodigoATodosLosEmpleadosQueTrabajanEnElrestauranteSinQueSeRepitan() throws EmpleadoDuplicadoException {
 		Empleado mesero1 = new Mesero(1,"pimenta",LocalDate.of(2012, 04, 01));
 		this.restaurante.agregarEmpleado(mesero1);
 		
@@ -374,7 +423,7 @@ public class TestBase {
 	
 	
 	@Test
-	public void queSePuedaOrdenarLaListaDeEmpleadosPorUnOrdenEspecificoSinQUeSeRepitaAlgunCodigoDescendentemente() {
+	public void queSePuedaOrdenarLaListaDeEmpleadosPorUnOrdenEspecificoSinQUeSeRepitaAlgunCodigoDescendentemente() throws EmpleadoDuplicadoException {
 		Empleado mesero1 = new Mesero(1,"pimenta",LocalDate.of(2012, 04, 01));
 		this.restaurante.agregarEmpleado(mesero1);
 		
@@ -431,7 +480,7 @@ public class TestBase {
 	}
 
 	@Test
-	public void queSePuedaOrdenarLosSueldosDeTodosLosEmpleadosQueTrabajanEnUnRestaurante() {
+	public void queSePuedaOrdenarLosSueldosDeTodosLosEmpleadosQueTrabajanEnUnRestaurante() throws EmpleadoDuplicadoException, EmpleadoNoEncontradoException {
 		// cajeros sueldo
 		Empleado cajero = new Cajero(11, "Juanito", LocalDate.of(2024,4,2));
 		restaurante.agregarEmpleado(cajero);
@@ -519,7 +568,7 @@ public class TestBase {
 	}
 	
 	@Test
-	public void queSePuedaOrdenarDescendentementeLosSueldosDeLosEncargadosSinCalcularLaCantidadDeMesersosQueTieneASuCargoQueTrabajanEnUnRestaurante() {
+	public void queSePuedaOrdenarDescendentementeLosSueldosDeLosEncargadosSinCalcularLaCantidadDeMesersosQueTieneASuCargoQueTrabajanEnUnRestaurante() throws EmpleadoDuplicadoException, EmpleadoNoEncontradoException {
 		Empleado encargado = new Encargado(1, "Santi", LocalDate.of(2003, 10, 10));
 		this.restaurante.agregarEmpleado(encargado);
         this.restaurante.cargarValorHoraDeUnEmpleado(1, 500.0);
@@ -542,7 +591,7 @@ public class TestBase {
 	}
 
 	@Test
-	public void queSePuedaOrdenarDescendenteLosSueldosDeLosMeserosQueTrabajanEnUnRestaurante() {
+	public void queSePuedaOrdenarDescendenteLosSueldosDeLosMeserosQueTrabajanEnUnRestaurante() throws EmpleadoDuplicadoException, EmpleadoNoEncontradoException {
 		Empleado mesero1 = new Mesero(4,"pimenta",LocalDate.of(2012, 04, 01));
 		this.restaurante.agregarEmpleado(mesero1);
         this.restaurante.cargarValorHoraDeUnEmpleado(4, 800.0);
@@ -590,7 +639,7 @@ public class TestBase {
 	}
 	
 	@Test 
-	public void queSePuedaOrdenarDescendenteLosSueldosDeLosCajerosQueTrabajanEnUnRestaurante() {
+	public void queSePuedaOrdenarDescendenteLosSueldosDeLosCajerosQueTrabajanEnUnRestaurante() throws EmpleadoDuplicadoException, EmpleadoNoEncontradoException {
 		
 		Empleado cajero = new Cajero(11, "Juanito", LocalDate.of(2024,4,2));
 		restaurante.agregarEmpleado(cajero);
@@ -614,7 +663,7 @@ public class TestBase {
 	}
 	
 	@Test 
-	public void queSePuedaObtenerLaCantidadDeMEserosQueTrabajanEnELRestaurante() {
+	public void queSePuedaObtenerLaCantidadDeMEserosQueTrabajanEnELRestaurante() throws EmpleadoDuplicadoException {
 		
 		Empleado mesero1 = new Mesero(4,"pimenta",LocalDate.of(2012, 04, 01));
 		this.restaurante.agregarEmpleado(mesero1);
@@ -637,7 +686,7 @@ public class TestBase {
 		assertEquals(5,(int) cantidadDeMeseros.size());
 	}
 	@Test 
-	public void queSePuedaObtenerListaDeLosCodigoDeLosMeserosOrdenadosPorAntiguedadDescendeteQueTrabajaEnElRestaurante() {
+	public void queSePuedaObtenerListaDeLosCodigoDeLosMeserosOrdenadosPorAntiguedadDescendeteQueTrabajaEnElRestaurante() throws EmpleadoDuplicadoException {
 		Empleado mesero1 = new Mesero(4,"pimenta",LocalDate.of(2012, 04, 01));
 		this.restaurante.agregarEmpleado(mesero1);
 
@@ -694,7 +743,7 @@ public class TestBase {
 
 
 	@Test 
-	public void queSePuedaObtenerElMeseroDelMes() throws ClienteNoEncontradoException, ReservaNoEncontradaException, ReservaClienteDuplicadoException, MesaNoEncontrada, MesaYaAsignadaAReserva, EmpleadoNoEncontradoException, PedidoDuplicadoException, ReservaClienteNoEncontrado, NoHayEmpleadoDelMesException {
+	public void queSePuedaObtenerElMeseroDelMes() throws ClienteNoEncontradoException, ReservaNoEncontradaException, ReservaClienteDuplicadoException, MesaNoEncontrada, MesaYaAsignadaAReserva, EmpleadoNoEncontradoException, PedidoDuplicadoException, ReservaClienteNoEncontrado, NoHayEmpleadoDelMesException, EmpleadoDuplicadoException {
 		
 		Mesero mesero = new Mesero(14, "pep", LocalDate.of(2009, 1, 5));
 		restaurante.agregarEmpleado(mesero);
@@ -737,7 +786,7 @@ public class TestBase {
 	
 	
 	@Test
-	public void queSePuedaObtenerLaCantidadDeEmpleadosQueTrabajaEnUnRestaurante() {
+	public void queSePuedaObtenerLaCantidadDeEmpleadosQueTrabajaEnUnRestaurante() throws EmpleadoDuplicadoException {
 		Empleado mesero1 = new Mesero(1,"pimenta",LocalDate.of(2012, 04, 01));
 		this.restaurante.agregarEmpleado(mesero1);
 		
@@ -941,7 +990,7 @@ public class TestBase {
 	@Test
 	public void queUnMeseroTomeUnPedido() throws ClienteNoEncontradoException, ReservaNoEncontradaException,
 			PedidoDuplicadoException, EmpleadoNoEncontradoException, PedidoYaTomado, ReservaClienteDuplicadoException,
-			ReservaClienteNoEncontrado, MesaNoEncontrada, MesaYaAsignadaAReserva {
+			ReservaClienteNoEncontrado, MesaNoEncontrada, MesaYaAsignadaAReserva, EmpleadoDuplicadoException {
 		Mesero mesero = new Mesero(15, "pepe", LocalDate.of(2009, 1, 5));
 		restaurante.agregarEmpleado(mesero);
 		Cliente cliente = new Cliente(1, "Juan");
@@ -972,7 +1021,7 @@ public class TestBase {
 	@Test(expected = ReservaClienteNoEncontrado.class)
 	public void dadoQueUnMeseroTomaUnPedidoSiNoSeEncuentraElPedidoQueLanceException()
 			throws ClienteNoEncontradoException, ReservaNoEncontradaException, ReservaClienteDuplicadoException,
-			EmpleadoNoEncontradoException, PedidoDuplicadoException, PedidoYaTomado, ReservaClienteNoEncontrado, MesaNoEncontrada, MesaYaAsignadaAReserva {
+			EmpleadoNoEncontradoException, PedidoDuplicadoException, PedidoYaTomado, ReservaClienteNoEncontrado, MesaNoEncontrada, MesaYaAsignadaAReserva, EmpleadoDuplicadoException {
 		Mesero mesero = new Mesero(15, "pepe", LocalDate.of(2009, 1, 5));
 		restaurante.agregarEmpleado(mesero);
 		Cliente cliente = new Cliente(1, "Juan");
@@ -990,7 +1039,7 @@ public class TestBase {
 	public void dadoQueUnMeseroTomaLaReservaDeUnClienteQueNoSeDeLaMismaCombinacionDeReservaClienteMeseroDosVeces()
 			throws ClienteNoEncontradoException, ReservaNoEncontradaException, PedidoYaTomado,
 			EmpleadoNoEncontradoException, PedidoDuplicadoException, ReservaClienteDuplicadoException,
-			ReservaClienteNoEncontrado, MesaNoEncontrada, MesaYaAsignadaAReserva {
+			ReservaClienteNoEncontrado, MesaNoEncontrada, MesaYaAsignadaAReserva, EmpleadoDuplicadoException {
 		Mesero mesero = new Mesero(15, "pepe", LocalDate.of(2009, 1, 5));
 		restaurante.agregarEmpleado(mesero);
 		Cliente cliente = new Cliente(1, "Juan");
@@ -1005,7 +1054,7 @@ public class TestBase {
 
 	@Test
 	public void queSePuedaAsignarEmpleadosAUnEncargado()
-			throws EmpleadoNoEncontradoException, EmpleadoYaAsignadoAEncargado {
+			throws EmpleadoNoEncontradoException, EmpleadoYaAsignadoAEncargado, EmpleadoDuplicadoException {
 		Encargado encargado = new Encargado(15, "pepe", LocalDate.of(2009, 1, 5));
 		Mesero mesero = new Mesero(15, "pepe", LocalDate.of(2009, 1, 5));
 		Mesero mesero2 = new Mesero(12, "lucas", LocalDate.of(2008, 5, 5));
@@ -1023,7 +1072,7 @@ public class TestBase {
 
 	@Test(expected = EmpleadoNoEncontradoException.class)
 	public void dadoQueSePuedeAsignarEmpleadosAUnEncargadoSiNoSeEncuentraElEncargadoQueSeLanceException()
-			throws EmpleadoNoEncontradoException, EmpleadoYaAsignadoAEncargado {
+			throws EmpleadoNoEncontradoException, EmpleadoYaAsignadoAEncargado, EmpleadoDuplicadoException {
 		Encargado encargado = new Encargado(15, "pepe", LocalDate.of(2009, 1, 5));
 		Mesero mesero = new Mesero(16, "pepe", LocalDate.of(2009, 1, 5));
 		restaurante.agregarEmpleado(mesero);
@@ -1033,7 +1082,7 @@ public class TestBase {
 
 	@Test(expected = EmpleadoYaAsignadoAEncargado.class)
 	public void dadoQueSePuedeAsignarEmpleadosAUnEncargadoSiUnEmpleadoYaFueAsignadoAEseEncargadoQueLanceException()
-			throws EmpleadoNoEncontradoException, EmpleadoYaAsignadoAEncargado {
+			throws EmpleadoNoEncontradoException, EmpleadoYaAsignadoAEncargado, EmpleadoDuplicadoException {
 		Encargado encargado = new Encargado(15, "pepe", LocalDate.of(2009, 1, 5));
 		restaurante.agregarEmpleado(encargado);
 		Mesero mesero = new Mesero(16, "pepe", LocalDate.of(2009, 1, 5));
@@ -1048,6 +1097,19 @@ public class TestBase {
 	public void queLanceUnaExcepcionSiQuieroObtenerElSueldoDeUnEmpleadoQueNoExiste() throws EmpleadoNoEncontradoException {
 		Double sueldoObtenido = restaurante.obtenerSueldoDeUnEmpleado(101);
 	}
+	
+
+
+	@Test(expected = ClienteNoEncontradoException.class)
+	public void queAlBuscarUnClienteNoExistenteLanceUnaException() throws ClienteNoEncontradoException {
+
+	    Integer numeroClienteNoExistente = 999; 
+	    
+	    restaurante.buscarUnCliente(numeroClienteNoExistente);
+	    
+
+	}
+
 	
 
 }

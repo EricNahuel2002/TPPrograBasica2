@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 
 public interface IRestaurante {
-	Boolean agregarEmpleado(Empleado empleado);
-	Boolean despedirUnEmpleado(Integer codigo);
-	Empleado buscarUnEmpleado(Integer codigo);
+	Boolean agregarEmpleado(Empleado empleado) throws EmpleadoDuplicadoException;
+	Boolean despedirUnEmpleado(Integer codigo) throws EmpleadoNoEncontradoException;
+	Empleado buscarUnEmpleado(Integer codigo) throws EmpleadoNoEncontradoException;
 	List<Empleado> obtenerListaDeEmpleadosOrdenadosDescendentePorSueldo();
 	List<Empleado> obtenerListaDeEncargadosOrdenadoDeMayorAMenorPorSueldo();
 	List<Empleado> obtenerListaDeMeserosOrdenadoDeMayorAMenorPorSueldo();
@@ -14,7 +14,7 @@ public interface IRestaurante {
 	Empleado obtenerElMeseroDelMes() throws NoHayEmpleadoDelMesException;
 	HashSet<Cliente> obtenerLaCantidadDeClientesQueFueronAlRestaurante();
 	Boolean agregarCliente(Cliente cliente);
-	Cliente buscarUnCliente(Integer id);
+	Cliente buscarUnCliente(Integer id) throws ClienteNoEncontradoException;
 	Double calcularElSueldoEnBaseALaAntiguedadDeUnEmpleado(Empleado empleado);
 	Boolean agregarReserva(Reserva reserva);
 }

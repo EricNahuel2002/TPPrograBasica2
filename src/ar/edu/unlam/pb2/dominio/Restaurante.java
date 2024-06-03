@@ -32,25 +32,32 @@ public class Restaurante implements IRestaurante {
 	}
 	
 
-	public Empleado buscarUnEmpleado(Integer codigo) {
-		for (Empleado empleado : empleados) {
-			if (empleado.getCodigo().equals(codigo)) {
+
+
+	public Empleado buscarUnEmpleado(Integer codigo) throws EmpleadoNoEncontradoException {
+		for(Empleado empleado: empleados) {
+			if(empleado.getCodigo().equals(codigo)) {
+
 				return empleado;
 			}
 		}
-		return null;
+		throw new EmpleadoNoEncontradoException();
 	}
 
-	public Boolean agregarEmpleado(Empleado empleado) {
-	    Empleado empleadoEncontrado = this.buscarUnEmpleado(empleado.getCodigo());
-	    if (empleadoEncontrado == null) {
-	        return empleados.add(empleado);
+	public Boolean agregarEmpleado(Empleado empleado) throws EmpleadoDuplicadoException {
+	    if (empleados.contains(empleado)) {
+	        throw new EmpleadoDuplicadoException();
 	    }
-	    return false;
+	    return empleados.add(empleado);
 	}
-	
-	@Override
-	public Boolean despedirUnEmpleado(Integer codigo) {
+
+
+
+
+
+
+	public Boolean despedirUnEmpleado(Integer codigo) throws EmpleadoNoEncontradoException {
+
 		Empleado empleado = this.buscarUnEmpleado(codigo);
 		if (empleado != null) {
 			return empleados.remove(empleado);
@@ -87,18 +94,18 @@ public class Restaurante implements IRestaurante {
 	}
 
 
-	public Cliente buscarUnCliente(Integer numero) {
+	public Cliente buscarUnCliente(Integer numero) throws ClienteNoEncontradoException {
 		for(Cliente cliente: clientes) {
 			if(cliente.getNumero().equals(numero)) {
 				return cliente;
 			}
 		}
-		return null;
+		throw new ClienteNoEncontradoException();
 	}
 	
 	// metodos calculara sueldo
 
-	public Boolean cargarMeseroACargoDelEncargado(Empleado encargado, Empleado mesero) {
+	public Boolean cargarMeseroACargoDelEncargado(Empleado encargado, Empleado mesero) throws EmpleadoNoEncontradoException {
 		if(buscarUnEmpleado(encargado.getCodigo()) != null && buscarUnEmpleado(mesero.getCodigo()) != null) {
 			return ((Encargado) encargado).asignarEmpleado(mesero);
 		}
@@ -107,7 +114,7 @@ public class Restaurante implements IRestaurante {
 	}
 
 
-	public void cargarValorHoraDeUnEmpleado(Integer idEmpleado, Double valorHora) {
+	public void cargarValorHoraDeUnEmpleado(Integer idEmpleado, Double valorHora) throws EmpleadoNoEncontradoException {
 
 		Empleado empleado = buscarUnEmpleado(idEmpleado);
 
@@ -117,7 +124,7 @@ public class Restaurante implements IRestaurante {
 
 	}
 
-	public void cargarHorasTrabajadasDeUnEmpleado(Integer idEmpleado, Integer horasTrabajadas) {
+	public void cargarHorasTrabajadasDeUnEmpleado(Integer idEmpleado, Integer horasTrabajadas) throws EmpleadoNoEncontradoException {
 
 		Empleado empleado = buscarUnEmpleado(idEmpleado);
 
@@ -127,7 +134,7 @@ public class Restaurante implements IRestaurante {
 
 	}
 
-	public Boolean cargarSueldoEmpleado(Integer idEmpleado) {
+	public Boolean cargarSueldoEmpleado(Integer idEmpleado) throws EmpleadoNoEncontradoException {
 		Empleado empleado = buscarUnEmpleado(idEmpleado);
 		Boolean cargado = false;
 
