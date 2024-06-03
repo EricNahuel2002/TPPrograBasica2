@@ -4,12 +4,13 @@ Integrantes: Aquino Eric, Debole Santiago, Pantano Esmeralda y Quelca Anahí.
 
 Objetivo: Desarrollar un sistema de gestión para un restaurante, optimizando la administración de recursos humanos y mejorando la eficiencia en la atención al cliente a través de los registros de empleados, clientes y reservas.
 
-Estructura: Este proyecto consta de 10 clases, distribuidas de la siguiente manera:
+Estructura: Este proyecto consta de 22 clases, distribuidas de la siguiente manera:
 •	4 clases de herencia que ayudan a calcular el sueldo según el tipo de empleado.
 •	1 clase interfaz.
 •	4 clases de objetos.
 •	1 clase intermediaria para la relación entre reservas y clientes.
 •	1 clase de comparador.
+• 11 clase exceptions
 •	1 clase de pruebas (test) donde se verifica el funcionamiento de los métodos.
 
 Para crear un sistema de gestión de restaurante, es fundamental establecer los siguientes métodos:
