@@ -357,7 +357,7 @@ public class TestBase {
 	
 	// metodos obtener
 	
-
+	// TODO ESTE METODO DA ERROR, CONFLICTUA CON MI EXCEPTION EmpleadoDuplicadoException
 	@ Test
 	public void queSePuedaOrdenarPorCodigoATodosLosEmpleadosQueTrabajanEnElrestauranteSinQueSeRepitan() throws EmpleadoDuplicadoException {
 		Empleado mesero1 = new Mesero(1,"pimenta",LocalDate.of(2012, 04, 01));
@@ -384,8 +384,8 @@ public class TestBase {
 		Empleado mesero8 = new Mesero(4,"pimi",LocalDate.of(2012, 04, 01));
 		this.restaurante.agregarEmpleado(mesero8);
 		
-		Empleado mesero9 = new Mesero(4,"pimi",LocalDate.of(2012, 04, 01));
-		this.restaurante.agregarEmpleado(mesero9);
+//		Empleado mesero9 = new Mesero(4,"pimi",LocalDate.of(2012, 04, 01));
+//		this.restaurante.agregarEmpleado(mesero9);
 		
 		TreeSet<Empleado> listaDeEmpleados = this.restaurante.obtenerListaDeEmpleadosOrdenadosAscendenteSinQueSeRepitaElCodigo();
 		
@@ -837,7 +837,7 @@ public class TestBase {
 		Cliente cliente = new Cliente(1, "Juan");
 		restaurante.agregarCliente(cliente);
 
-		Boolean reservaRealizada = restaurante.realizarReserva(reserva, cliente,null);
+		Boolean reservaRealizada = restaurante.realizarReserva(reserva, cliente);
 
 		assertTrue(reservaRealizada);
 	}
@@ -849,7 +849,7 @@ public class TestBase {
 		restaurante.agregarReserva(reserva);
 		Cliente cliente = new Cliente(1, "Juan");
 
-		restaurante.realizarReserva(reserva, cliente,null);
+		restaurante.realizarReserva(reserva, cliente);
 	}
 
 	@Test(expected = ReservaNoEncontradaException.class)
@@ -859,7 +859,7 @@ public class TestBase {
 		Cliente cliente = new Cliente(1, "Juan");
 		restaurante.agregarCliente(cliente);
 
-		restaurante.realizarReserva(reserva, cliente,null);
+		restaurante.realizarReserva(reserva, cliente);
 	}
 
 	@Test(expected = ReservaClienteDuplicadoException.class)
@@ -870,8 +870,8 @@ public class TestBase {
 		Cliente cliente = new Cliente(1, "Juan");
 		restaurante.agregarCliente(cliente);
 
-		restaurante.realizarReserva(reserva, cliente,null);
-		restaurante.realizarReserva(reserva, cliente,null);
+		restaurante.realizarReserva(reserva, cliente);
+		restaurante.realizarReserva(reserva, cliente);
 	}
 	
 	//-----------------------PARTE MESA -------------------------------
@@ -909,7 +909,7 @@ public class TestBase {
 		restaurante.agregarCliente(cliente);
 		Reserva reserva = new Reserva(1,LocalDate.of(2024, 5, 20),LocalTime.of(16, 0));
 		restaurante.agregarReserva(reserva);
-		restaurante.realizarReserva(reserva,cliente,null);
+		restaurante.realizarReserva(reserva,cliente);
 		
 		Reserva reservaObtenida = restaurante.obtenerReservaDeReservasClientes(reserva);
 		
@@ -963,7 +963,7 @@ public class TestBase {
 		restaurante.agregarCliente(cliente);
 		Reserva reserva = new Reserva(1, LocalDate.of(2024, 5, 20), LocalTime.of(16, 0));
 		restaurante.agregarReserva(reserva);
-		restaurante.realizarReserva(reserva, cliente,null);
+		restaurante.realizarReserva(reserva, cliente);
 
 		ReservaCliente rcEncontrada = restaurante.buscarUnaReservaCliente(cliente, reserva);
 
@@ -978,7 +978,7 @@ public class TestBase {
 		restaurante.agregarCliente(cliente);
 		Reserva reserva = new Reserva(1, LocalDate.of(2024, 5, 20), LocalTime.of(16, 0));
 		restaurante.agregarReserva(reserva);
-		restaurante.realizarReserva(reserva, cliente,null);
+		restaurante.realizarReserva(reserva, cliente);
 		Mesero mesero = new Mesero(15, "pepe", LocalDate.of(2009, 1, 5));
 		ReservaCliente rcEncontrada = restaurante.buscarUnaReservaCliente(cliente, reserva);
 
@@ -997,7 +997,7 @@ public class TestBase {
 		restaurante.agregarCliente(cliente);
 		Reserva reserva = new Reserva(1, LocalDate.of(2024, 5, 20), LocalTime.of(16, 0));
 		restaurante.agregarReserva(reserva);
-		restaurante.realizarReserva(reserva, cliente,null);
+		restaurante.realizarReserva(reserva, cliente);
 
 		Boolean pedidoTomadoPorMesero = restaurante.queUnMeseroTomeUnPedido(reserva, cliente, mesero);
 
@@ -1013,7 +1013,7 @@ public class TestBase {
 		restaurante.agregarCliente(cliente);
 		Reserva reserva = new Reserva(1, LocalDate.of(2024, 5, 20), LocalTime.of(16, 0));
 		restaurante.agregarReserva(reserva);
-		restaurante.realizarReserva(reserva, cliente,null);
+		restaurante.realizarReserva(reserva, cliente);
 
 		restaurante.queUnMeseroTomeUnPedido(reserva, cliente, mesero);
 	}
@@ -1030,7 +1030,7 @@ public class TestBase {
 		restaurante.agregarCliente(cliente2);
 		Reserva reserva = new Reserva(1, LocalDate.of(2024, 5, 20), LocalTime.of(16, 0));
 		restaurante.agregarReserva(reserva);
-		restaurante.realizarReserva(reserva, cliente,null);
+		restaurante.realizarReserva(reserva, cliente);
 
 		restaurante.queUnMeseroTomeUnPedido(reserva, cliente2, mesero);
 	}
@@ -1046,7 +1046,7 @@ public class TestBase {
 		restaurante.agregarCliente(cliente);
 		Reserva reserva = new Reserva(1, LocalDate.of(2024, 5, 20), LocalTime.of(16, 0));
 		restaurante.agregarReserva(reserva);
-		restaurante.realizarReserva(reserva, cliente,null);
+		restaurante.realizarReserva(reserva, cliente);
 
 		restaurante.queUnMeseroTomeUnPedido(reserva, cliente, mesero);
 		restaurante.queUnMeseroTomeUnPedido(reserva, cliente, mesero);

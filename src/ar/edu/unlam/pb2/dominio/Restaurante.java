@@ -300,6 +300,17 @@ public class Restaurante implements IRestaurante {
 
 // metodos reservas
 	
+	public Boolean realizarReserva(Reserva reserva, Cliente cliente)
+			throws ClienteNoEncontradoException, ReservaNoEncontradaException, ReservaClienteDuplicadoException, MesaNoEncontrada, MesaYaAsignadaAReserva {
+		
+		Cliente clienteEncontrado = validacionClienteNoEncontrado(cliente);
+		Reserva reservaEncontrada = validacionReservaNoEncontrada(reserva);
+		ReservaCliente rc = validacionReservaClienteDuplicado(clienteEncontrado, reservaEncontrada);
+		
+		rc = new ReservaCliente(reservaEncontrada, clienteEncontrado,null);
+		return reservasClientes.add(rc);
+	}
+	
 	public Boolean realizarReserva(Reserva reserva, Cliente cliente, Mesa mesa)
 			throws ClienteNoEncontradoException, ReservaNoEncontradaException, ReservaClienteDuplicadoException, MesaNoEncontrada, MesaYaAsignadaAReserva {
 		
@@ -311,6 +322,8 @@ public class Restaurante implements IRestaurante {
 		rc = new ReservaCliente(reservaEncontrada, clienteEncontrado,mesaEncontrada);
 		return reservasClientes.add(rc);
 	}
+	
+	
 
 	private Mesa validacionMesaNoEncontrada(Mesa mesa) throws MesaNoEncontrada {
 		Mesa mesaEncontrada = this.buscarMesa(mesa);
